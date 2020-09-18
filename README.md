@@ -1,9 +1,9 @@
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/)
 [![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
-[![Buy me a](https://img.shields.io/badge/made%20with-%E2%98%95%EF%B8%8F%20coffee-yellow.svg)](https://paypal.me/rdmrocha)
+[![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
 
-<p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
+<p align="left"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
 # Linkalho
 
