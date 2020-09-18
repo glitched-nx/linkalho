@@ -1,12 +1,15 @@
-![License](https://img.shields.io/badge/License-GPLv3-blue.svg) [![GitHub release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/) [![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+[![GitHub release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/)
+[![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
+[![Buy me a](https://img.shields.io/badge/made%20with-%E2%98%95%EF%B8%8F%20coffee-yellow.svg)](https://paypal.me/rdmrocha)
 
+<p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
 # Linkalho
 
 Linkalho is an homebrew app that will link NNID accounts offline. It links (or unlinks) <b>existing</b> accounts so you won't lose your saves.
 This app does not create a new account. If you create a new account and want to link it, just re-run the app.
 
-<p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
 Do you like Linkalho and find it useful? You can by me a coffee clinking the link below. Thanks!<br>
 <a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" width="150px" /></a>
