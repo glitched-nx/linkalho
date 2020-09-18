@@ -8,6 +8,10 @@ This app does not create a new account. If you create a new account and want to 
 
 <p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
+## Buy me a coffee ☕
+If you like Linkalho and find it usefull, you can by me a coffee clinking the link below. Thanks!
+<a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/buy-me-a-coffee.png" /></a>
+
 
 ## Usage
 - Place the .nro file in the `/switch/linkalho` folder of your SDcard.
