@@ -8,6 +8,9 @@ This app does not create a new account. If you create a new account and want to 
 
 <p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
+Do you like Linkalho and find it useful?, you can by me a coffee clinking the link below. Thanks!
+<a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" width="100px" /></a>
+
 
 ## Usage
 - Place the .nro file in the `/switch/linkalho` folder of your SDcard.
@@ -32,13 +35,10 @@ This operation creates a backup in `/switch/linkalho/backups`
 <p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/screenshot3.jpg"></p>
 <p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/screenshot4.jpg"></p>
 
-## Do you like Linkalho and find it useful?
-<a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" /></a>
-
 ## Credits
   - [devkitPro](https://devkitpro.org) for the toolchain!
   - [natinusala (lib borealis)](https://github.com/natinusala/borealis) for the amazing library that mimicks the Switch's original UI and UX
   - [sebastiandev (zipper wrapper for minizip)](https://github.com/sebastiandev/zipper/) for their nice wrapper to the minizip
   - [Kronos2308](https://github.com/Kronos2308) for the help in the initial phases of research.
-  - **stick2target** for the logo, beta testing and for supplying crucial files that helped in the creation of the generators.
+  - **stick2target** for beta testing and for supplying crucial files that helped in the creation of the generators.
   - **boredomisacrime** for the beta testing.
