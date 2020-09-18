@@ -8,8 +8,8 @@ This app does not create a new account. If you create a new account and want to 
 
 <p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
-Do you like Linkalho and find it useful?, you can by me a coffee clinking the link below. Thanks!
-<a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" width="100px" /></a>
+Do you like Linkalho and find it useful? You can by me a coffee clinking the link below. Thanks!<br>
+<a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" width="150px" /></a>
 
 
 ## Usage
