@@ -11,7 +11,10 @@ Linkalho is an homebrew app that will link NNID accounts offline. It links (or u
 This app does not create a new account. If you create a new account and want to link it, just re-run the app.
 
 
-Do you like Linkalho and find it useful? You can by me a coffee clinking the link below. Thanks!<br>
+## Why do I need this app?
+If you never had issues with games/apps failing to launch until you link your Switch user account and you never experienced issues with certain titles stuck in _Updating game data_ or certain official emulators presenting you with nothing else but a black screen instead of the game selection, then you don't need to use this homebrew.
+
+Do you like this app and find it useful? You can buy me a coffee clicking the link below. Thanks!<br>
 <a href="https://paypal.me/rdmrocha"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/raw/buy-me-a-coffee.png" width="150px" /></a>
 
 
