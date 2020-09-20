@@ -1,23 +1,12 @@
-#ifndef __LINKUSER_UTILS_HPP__
-#define __LINKUSER_UTILS_HPP__
+#ifndef __LINKALHO_UTILS_HPP__
+#define __LINKALHO_UTILS_HPP__
 
 #include <switch.h>
-#include <iostream>
-#include "constants.hpp"
 
-void attempt_reboot(){
-#ifndef DEBUG
-    Result rc = bpcInitialize();
-    if (R_FAILED(rc))
-        printf("bpcInit: %08X\n", rc);
-    else
-    {
-        bpcRebootSystem();
-        bpcExit();
-    }
-#else
-    std::cout << "Reboot would happen here" << std::endl;
-#endif
-}
+void attemptReboot();
+HidsysNotificationLedPattern getBreathePattern();
+HidsysNotificationLedPattern getConfirmPattern();
+HidsysNotificationLedPattern getClearPattern();
+void sendLedPattern(HidsysNotificationLedPattern pattern);
 
-#endif // __LINKUSER_UTILS_HPP__
+#endif // __LINKALHO_UTILS_HPP__

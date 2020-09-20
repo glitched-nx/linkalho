@@ -17,8 +17,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    // Init the app
-    // brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
+    pmshellInitialize();
+    bool canUseLed = false;
+    if (R_SUCCEEDED(hidsysInitialize())) {
+        canUseLed = true;
+    }
+    init_dirs();
 
     if (!brls::Application::init("link-user", CustomStyle::custom_style(), CustomTheme::custom_theme()))
     {
@@ -32,12 +36,12 @@ int main(int argc, char* argv[])
     brls::List* operationList = new brls::List();
 
     brls::ListItem* linkItem = new brls::ListItem("Link all accounts");
-    linkItem->getClickEvent()->subscribe([](brls::View* view) {
+    linkItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("Link all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\nIf you had any previosly linked NNID account, it will be erased!")
+            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Linking...", [](){
@@ -45,7 +49,7 @@ int main(int argc, char* argv[])
             })
         );
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Accounts linked!", true)
+            new ConfirmPage(stagedFrame, "Accounts linked!", true, canUseLed)
         );
 
         brls::Application::pushView(stagedFrame);
@@ -57,12 +61,12 @@ int main(int argc, char* argv[])
     operationList->addView(linkItem);
 
     brls::ListItem* unlinkItem = new brls::ListItem("Unlink all accounts");
-    unlinkItem->getClickEvent()->subscribe([](brls::View* view) {
+    unlinkItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("Unlink all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\nIf you had any previosly linked NNID account, it will be erased!")
+            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Unlinking...", [](){
@@ -70,7 +74,7 @@ int main(int argc, char* argv[])
             })
         );
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Accounts unlinked!", true)
+            new ConfirmPage(stagedFrame, "Accounts unlinked!", true, canUseLed)
         );
 
         brls::Application::pushView(stagedFrame);
@@ -85,12 +89,12 @@ int main(int argc, char* argv[])
     bool backup_exists = (stat(RESTORE_FILE_PATH, &buffer) == 0);
     if (backup_exists) {
         brls::ListItem* restoreItem = new brls::ListItem("Restore backup");
-        restoreItem->getClickEvent()->subscribe([](brls::View* view) {
+        restoreItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
             stagedFrame->setTitle("Restore backup");
 
             stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "Restoring this backup WILL overwrite all files!\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!")
+                new ConfirmPage(stagedFrame, "Restoring this backup WILL overwrite all files!\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!", false, canUseLed)
             );
             stagedFrame->addStage(
                 new WorkerPage(stagedFrame, "Restoring...", [](){
@@ -98,7 +102,7 @@ int main(int argc, char* argv[])
                 })
             );
             stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "Backup restored!", true)
+                new ConfirmPage(stagedFrame, "Backup restored!", true, canUseLed)
             );
 
             brls::Application::pushView(stagedFrame);
@@ -128,14 +132,13 @@ int main(int argc, char* argv[])
     rootFrame->registerAction("", brls::Key::MINUS, []{return true;}, true);
     rootFrame->updateActionHint(brls::Key::MINUS, ""); // make the change visible
 
-    pmshellInitialize();
-    init_dirs();
-
     // Run the app
     while (brls::Application::mainLoop())
         ;
 
     pmshellExit();
+    if (canUseLed)
+        hidsysExit();
 
     // Exit
     return EXIT_SUCCESS;

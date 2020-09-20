@@ -1,5 +1,5 @@
-#ifndef __LINKUSER_GENERATOR_HPP__
-#define __LINKUSER_GENERATOR_HPP__
+#ifndef __LINKALHO_GENERATOR_HPP__
+#define __LINKALHO_GENERATOR_HPP__
 
 #include <string>
 
@@ -29,4 +29,4 @@ public:
 
 };
 
-#endif  // __LINKUSER_GENERATOR_HPP__
+#endif  // __LINKALHO_GENERATOR_HPP__

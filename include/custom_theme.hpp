@@ -1,5 +1,5 @@
-#ifndef __LINKUSER_CUSTOM_THEME_HPP__
-#define __LINKUSER_CUSTOM_THEME_HPP__
+#ifndef __LINKALHO_CUSTOM_THEME_HPP__
+#define __LINKALHO_CUSTOM_THEME_HPP__
 
 #include <borealis/theme.hpp>
 
@@ -8,4 +8,4 @@ public:
     static brls::Theme custom_theme();
 };
 
-#endif // __LINKUSER_CUSTOM_THEME_HPP__
+#endif // __LINKALHO_CUSTOM_THEME_HPP__

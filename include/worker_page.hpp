@@ -1,5 +1,5 @@
-#ifndef __LINKUSER_WORKER_PAGE_HPP__
-#define __LINKUSER_WORKER_PAGE_HPP__
+#ifndef __LINKALHO_WORKER_PAGE_HPP__
+#define __LINKALHO_WORKER_PAGE_HPP__
 
 #include <borealis.hpp>
 #include <thread>
@@ -32,4 +32,4 @@ class WorkerPage : public brls::View
     void willDisappear(bool resetState = false) override;
 };
 
-#endif // __LINKUSER_WORKER_PAGE_HPP__
+#endif // __LINKALHO_WORKER_PAGE_HPP__
