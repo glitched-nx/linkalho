@@ -100,9 +100,16 @@ void unmount_save_data(FsFileSystem& acc, bool commit=false)
 #endif
 }
 
-void execute_backup(const string& reason)
+void execute_backup(const string& reason, bool progress=false)
 {
+    if (progress) {
+        ProgressEvent::instance().reset();
+        ProgressEvent::instance().setTotalSteps(2);
+    }
     cleanup_mac_files(RESTORE_PATH);
+    if (progress) {
+        ProgressEvent::instance().setStep(1);
+    }
 
     time_t t = time(nullptr);
     tm tm = *localtime(&t);
@@ -117,6 +124,9 @@ void execute_backup(const string& reason)
     zipper.add(string(ACCOUNT_PATH)+"/nas");
     zipper.close();
     cout << "Backup created in " << BACKUP_PATH << endl;
+    if (progress) {
+        ProgressEvent::instance().setStep(2);
+    }
 }
 
 void restore_backup(const string& backup_fullpath)

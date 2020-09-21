@@ -3,17 +3,22 @@
 #include <borealis.hpp>
 #include "utils.hpp"
 #include <algorithm>
+#include "reboot_payload.h"
 
 ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed): reboot(reboot), canUseLed(canUseLed)
 {
-    this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS: brls::ButtonStyle::PLAIN))->setLabel(reboot ? "Reboot": "Continue");
+    auto payloadFile = getPayload();
+
+    this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS: brls::ButtonStyle::PLAIN))->setLabel(reboot ? (payloadFile.empty() ? "Reboot" : "Reboot to payload"): "Continue");
 
     this->button->setParent(this);
-    this->button->getClickEvent()->subscribe([frame, this](View* view) {
+    this->button->getClickEvent()->subscribe([frame, this, payloadFile](View* view) {
         if (!frame->isLastStage())
             frame->nextStage();
         else if (this->reboot) {
-            attemptReboot();
+            if (payloadFile.empty() || !rebootToPayload(payloadFile.c_str())) {
+                attemptForceReboot();
+            }
             brls::Application::popView();
         }
     });

@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cstring>
+#include <string>
 #include "constants.hpp"
 #include "utils.hpp"
+#include <sys/stat.h>
+#include <filesystem>
 
-void attemptReboot()
+void attemptForceReboot()
 {
 #ifndef DEBUG
     Result rc = bpcInitialize();
@@ -77,4 +80,47 @@ void sendLedPattern(HidsysNotificationLedPattern pattern)
             hidsysSetNotificationLedPattern(&pattern, uniquePadIds[i]);
         }
     }
+}
+
+bool isServiceRunning(const char* serviceName)
+{
+    Handle tmph = 0;
+    SmServiceName srvname = smEncodeName(serviceName);
+    Result rc = smRegisterService(&tmph, srvname, false, 1);
+    if (R_FAILED(rc)) return true;
+    smUnregisterService(srvname);
+    return false;
+}
+
+bool isAtmosphere()
+{
+    if(splInitialize() != 0) return false;
+    u64 tmpc = 0;
+    bool isatmos = R_SUCCEEDED(splGetConfig((SplConfigItem)65000, &tmpc));
+    splExit();
+    return isatmos;
+}
+
+inline bool isReiNX() { return isServiceRunning("rnx"); }
+inline bool isSXOS() { return isServiceRunning("tx"); }
+
+const std::string getPayload()
+{
+    // if an override payload exists, boot from it
+    if (std::filesystem::exists(CUSTOM_PAYLOAD)) {
+        return CUSTOM_PAYLOAD;
+    }
+
+    if (isSXOS()) {
+        // cannot chainload to bood.dat directly. if SXOS and no "payload.bin", force reboot
+        return "";
+    }
+    std::string payloadPath("");
+    if (isAtmosphere()) {
+        payloadPath = AMS_PAYLOAD;
+    } else if (isReiNX()) {
+        payloadPath = REINX_PAYLOAD;
+    }
+    return (!payloadPath.empty() && std::filesystem::exists(payloadPath)) ? payloadPath : "";
+
 }

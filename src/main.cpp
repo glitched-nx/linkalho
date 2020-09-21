@@ -11,6 +11,7 @@
 #include "custom_style.hpp"
 #include "custom_theme.hpp"
 #include "progress_event.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -24,9 +25,9 @@ int main(int argc, char* argv[])
     }
     init_dirs();
 
-    if (!brls::Application::init("link-user", CustomStyle::custom_style(), CustomTheme::custom_theme()))
+    if (!brls::Application::init(APP_TITLE_LOWER, CustomStyle::custom_style(), CustomTheme::custom_theme()))
     {
-        brls::Logger::error("Unable to init Borealis application");
+        brls::Logger::error(string("Unable to init ") + APP_TITLE);
         return EXIT_FAILURE;
     }
 
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Link all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
+            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Linking...", [](){
@@ -66,7 +67,7 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Unlink all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
+            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Unlinking...", [](){
@@ -94,7 +95,7 @@ int main(int argc, char* argv[])
             stagedFrame->setTitle("Restore backup");
 
             stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "Restoring this backup WILL overwrite all files!\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!", false, canUseLed)
+                new ConfirmPage(stagedFrame, "Restoring this backup WILL overwrite all files!\n(Your saves will be preserved)\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!", false, canUseLed)
             );
             stagedFrame->addStage(
                 new WorkerPage(stagedFrame, "Restoring...", [](){
@@ -115,7 +116,7 @@ int main(int argc, char* argv[])
     } else {
         brls::ListItem* dialogItem = new brls::ListItem("Restore backup");
         dialogItem->getClickEvent()->subscribe([](brls::View* view) {
-            brls::Dialog* dialog = new brls::Dialog("To restore, please place yout backup file into\n" + string(RESTORE_FILE_PATH) + "\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!");
+            brls::Dialog* dialog = new brls::Dialog("To restore, please place your backup file into\n" + string(RESTORE_FILE_PATH) + "\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!");
             dialog->addButton("Close", [dialog](brls::View* view) {
                 dialog->close();
             });
@@ -125,6 +126,31 @@ int main(int argc, char* argv[])
         });
         operationList->addView(dialogItem);
     }
+
+    brls::ListItem* backupItem = new brls::ListItem("Create manual backup");
+    backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
+        brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
+        stagedFrame->setTitle("Create manual backup");
+
+        stagedFrame->addStage(
+            new ConfirmPage(stagedFrame, "All linking and unlinking operations will produce a backup before making changes!\n\nYou should only use this option if you want to manually create a backup.", false, canUseLed)
+        );
+        stagedFrame->addStage(
+            new WorkerPage(stagedFrame, "Backing up...", [](){
+                execute_backup("manual", true);
+            })
+        );
+        stagedFrame->addStage(
+            new ConfirmPage(stagedFrame, "Backup created!", true, canUseLed)
+        );
+
+        brls::Application::pushView(stagedFrame);
+        stagedFrame->registerAction("", brls::Key::PLUS, []{return true;}, true);
+        stagedFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
+        stagedFrame->registerAction("", brls::Key::B, []{return true;}, true);
+        stagedFrame->updateActionHint(brls::Key::B, ""); // make the change visible
+    });
+    operationList->addView(backupItem);
 
 
     rootFrame->setContentView(operationList);

@@ -3,10 +3,11 @@
 
 #include <switch.h>
 
-void attemptReboot();
+void attemptForceReboot();
 HidsysNotificationLedPattern getBreathePattern();
 HidsysNotificationLedPattern getConfirmPattern();
 HidsysNotificationLedPattern getClearPattern();
 void sendLedPattern(HidsysNotificationLedPattern pattern);
+const std::string getPayload();
 
 #endif // __LINKALHO_UTILS_HPP__
