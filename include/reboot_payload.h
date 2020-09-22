@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-bool rebootToPayload(const char* payload_file);
+bool rebootToPayload(const char* payloadFile);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,6 @@
 #include "custom_style.hpp"
 
-brls::Style CustomStyle::custom_style()
+brls::Style CustomStyle::LinkalhoStyle()
 {
     brls::Style style = brls::Style();
 

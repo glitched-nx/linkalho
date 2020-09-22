@@ -71,12 +71,12 @@ HidsysNotificationLedPattern getClearPattern()
 
 void sendLedPattern(HidsysNotificationLedPattern pattern)
 {
-    s32 total_entries;
+    s32 totalEntries;
     u64 uniquePadIds[2];
     memset(uniquePadIds, 0, sizeof(uniquePadIds));
-    Result res = hidsysGetUniquePadsFromNpad(hidGetHandheldMode() ? CONTROLLER_HANDHELD : CONTROLLER_PLAYER_1, uniquePadIds, 2, &total_entries);
+    Result res = hidsysGetUniquePadsFromNpad(hidGetHandheldMode() ? CONTROLLER_HANDHELD : CONTROLLER_PLAYER_1, uniquePadIds, 2, &totalEntries);
     if (R_SUCCEEDED(res)) {
-        for (auto i = 0; i < total_entries; ++i) {
+        for (auto i = 0; i < totalEntries; ++i) {
             hidsysSetNotificationLedPattern(&pattern, uniquePadIds[i]);
         }
     }
@@ -85,10 +85,10 @@ void sendLedPattern(HidsysNotificationLedPattern pattern)
 bool isServiceRunning(const char* serviceName)
 {
     Handle tmph = 0;
-    SmServiceName srvname = smEncodeName(serviceName);
-    Result rc = smRegisterService(&tmph, srvname, false, 1);
+    SmServiceName svcName = smEncodeName(serviceName);
+    Result rc = smRegisterService(&tmph, svcName, false, 1);
     if (R_FAILED(rc)) return true;
-    smUnregisterService(srvname);
+    smUnregisterService(svcName);
     return false;
 }
 
@@ -96,9 +96,9 @@ bool isAtmosphere()
 {
     if(splInitialize() != 0) return false;
     u64 tmpc = 0;
-    bool isatmos = R_SUCCEEDED(splGetConfig((SplConfigItem)65000, &tmpc));
+    bool isAtmos = R_SUCCEEDED(splGetConfig((SplConfigItem)65000, &tmpc));
     splExit();
-    return isatmos;
+    return isAtmos;
 }
 
 inline bool isReiNX() { return isServiceRunning("rnx"); }

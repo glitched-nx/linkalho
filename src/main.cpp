@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
     if (R_SUCCEEDED(hidsysInitialize())) {
         canUseLed = true;
     }
-    init_dirs();
+    initDirs();
 
-    if (!brls::Application::init(APP_TITLE_LOWER, CustomStyle::custom_style(), CustomTheme::custom_theme()))
+    if (!brls::Application::init(APP_TITLE_LOWER, CustomStyle::LinkalhoStyle(), CustomTheme::LinkalhoTheme()))
     {
         brls::Logger::error(string("Unable to init ") + APP_TITLE);
         return EXIT_FAILURE;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Linking...", [](){
-                link_account();
+                linkAccount();
             })
         );
         stagedFrame->addStage(
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Unlinking...", [](){
-                unlink_account();
+                unlinkAccount();
             })
         );
         stagedFrame->addStage(
@@ -87,8 +87,8 @@ int main(int argc, char* argv[])
     operationList->addView(unlinkItem);
 
     struct stat buffer;
-    bool backup_exists = (stat(RESTORE_FILE_PATH, &buffer) == 0);
-    if (backup_exists) {
+    bool backupExists = (stat(RESTORE_FILE_PATH, &buffer) == 0);
+    if (backupExists) {
         brls::ListItem* restoreItem = new brls::ListItem("Restore backup");
         restoreItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
             );
             stagedFrame->addStage(
                 new WorkerPage(stagedFrame, "Restoring...", [](){
-                    restore_backup(RESTORE_FILE_PATH);
+                    restoreBackup(RESTORE_FILE_PATH);
                 })
             );
             stagedFrame->addStage(
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Backing up...", [](){
-                execute_backup("manual", true);
+                executeBackup("manual", true);
             })
         );
         stagedFrame->addStage(

@@ -16,7 +16,7 @@
 using namespace std;
 using namespace zipper;
 
-void shutdown_account()
+void shutdownAccount()
 {
     cout << "Attempting to shut down account and olsc... ";
     bool success = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000001E));
@@ -25,7 +25,7 @@ void shutdown_account()
     pmshellTerminateProgram(0x010000000000003E);
 }
 
-vector<filesystem::path> get_dir_contents(const string& path, const string& extension, bool onlydirs=false)
+vector<filesystem::path> getDirContents(const string& path, const string& extension, bool onlydirs=false)
 {
     vector<filesystem::path> contents;
     bool filtered = extension.length() > 0;
@@ -45,7 +45,7 @@ vector<filesystem::path> get_dir_contents(const string& path, const string& exte
     return contents;
 }
 
-void cleanup_mac_files(const string& path)
+void cleanupMacFiles(const string& path)
 {
     for (auto& entry: filesystem::recursive_directory_iterator(path)) {
         if (!entry.is_regular_file()) {
@@ -57,7 +57,7 @@ void cleanup_mac_files(const string& path)
     }
 }
 
-bool init_dirs()
+bool initDirs()
 {
     try
     {
@@ -73,11 +73,11 @@ bool init_dirs()
     return false;
 }
 
-FsFileSystem mount_save_data()
+FsFileSystem mountSaveData()
 {
     FsFileSystem acc;
 #ifndef DEBUG
-    shutdown_account();
+    shutdownAccount();
     cout << "Attempting to mount savedata... ";
     if(R_SUCCEEDED(fsOpen_SystemSaveData(&acc, FsSaveDataSpaceId_System, 0x8000000000000010, (AccountUid) {0}))) {
         cout << "Succeess!" << endl;
@@ -89,7 +89,7 @@ FsFileSystem mount_save_data()
     return acc;
 }
 
-void unmount_save_data(FsFileSystem& acc, bool commit=false)
+void unmountSaveData(FsFileSystem& acc, bool commit=false)
 {
 #ifndef DEBUG
     if (commit) {
@@ -100,23 +100,23 @@ void unmount_save_data(FsFileSystem& acc, bool commit=false)
 #endif
 }
 
-void execute_backup(const string& reason, bool progress=false)
+void executeBackup(const string& reason, bool progress=false)
 {
     if (progress) {
         ProgressEvent::instance().reset();
         ProgressEvent::instance().setTotalSteps(2);
     }
-    cleanup_mac_files(RESTORE_PATH);
+    cleanupMacFiles(RESTORE_PATH);
     if (progress) {
         ProgressEvent::instance().setStep(1);
     }
 
     time_t t = time(nullptr);
     tm tm = *localtime(&t);
-    stringstream backup_file;
-    backup_file << BACKUP_PATH << "backup_profiles_" << put_time(&tm, "%Y%m%d_%H%M%S") << "[" << reason << "].zip";
+    stringstream backupFile;
+    backupFile << BACKUP_PATH << "backup_profiles_" << put_time(&tm, "%Y%m%d_%H%M%S") << "[" << reason << "].zip";
     cout << "Creating backup..." << endl << endl;
-    Zipper zipper(backup_file.str());
+    Zipper zipper(backupFile.str());
     //auto flags = (Zipper::zipFlags::Better | Zipper::zipFlags::SaveHierarchy);
     zipper.add(string(ACCOUNT_PATH)+"/registry.dat");
     zipper.add(string(ACCOUNT_PATH)+"/avators");
@@ -129,40 +129,40 @@ void execute_backup(const string& reason, bool progress=false)
     }
 }
 
-void restore_backup(const string& backup_fullpath)
+void restoreBackup(const string& backupFullpath)
 {
     try {
         ProgressEvent::instance().reset();
         ProgressEvent::instance().setTotalSteps(7);
 
-        FsFileSystem acc = mount_save_data();
+        FsFileSystem acc = mountSaveData();
         ProgressEvent::instance().setStep(1);
 
-        execute_backup("restore");
+        executeBackup("restore");
         ProgressEvent::instance().setStep(2);
         cout << endl << endl  << "Restoring backup... ";
 
-        auto baas_dir = string(RESTORE_PATH) + "/baas";
-        filesystem::remove_all(baas_dir);
+        auto baasDir = string(RESTORE_PATH) + "/baas";
+        filesystem::remove_all(baasDir);
         ProgressEvent::instance().setStep(3);
 
-        auto nas_dir = string(RESTORE_PATH) + "/nas";
-        filesystem::remove_all(nas_dir);
+        auto nasDir = string(RESTORE_PATH) + "/nas";
+        filesystem::remove_all(nasDir);
         ProgressEvent::instance().setStep(4);
 
-        auto avators_dir = string(RESTORE_PATH) + "/avators";
-        for (auto& jpg_file: get_dir_contents(avators_dir, ".jpg")) {
-            filesystem::remove_all(jpg_file.string());
+        auto avatorsDir = string(RESTORE_PATH) + "/avators";
+        for (auto& jpgFile: getDirContents(avatorsDir, ".jpg")) {
+            filesystem::remove_all(jpgFile.string());
         }
         ProgressEvent::instance().setStep(5);
 
-        Unzipper unzipper(backup_fullpath);
+        Unzipper unzipper(backupFullpath);
         unzipper.extract(RESTORE_PATH);
         unzipper.close();
         ProgressEvent::instance().setStep(6);
         cout << "Success!" << endl;
 
-        unmount_save_data(acc, true);
+        unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(7);
     }
     catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.
@@ -172,47 +172,46 @@ void restore_backup(const string& backup_fullpath)
     }
 }
 
-void link_account()
+void linkAccount()
 {
     try {
         ProgressEvent::instance().reset();
         ProgressEvent::instance().setTotalSteps(6);
 
-        FsFileSystem acc = mount_save_data();
+        FsFileSystem acc = mountSaveData();
         ProgressEvent::instance().setStep(1);
 
-        execute_backup("link");
+        executeBackup("link");
         ProgressEvent::instance().setStep(2);
         cout << endl << endl  << "Linking accounts... ";
 
-        auto baas_dir = string(ACCOUNT_PATH) + "/baas";
-        // cout << "create=[" << baas_dir << "]" << endl;
-        filesystem::create_directories(baas_dir);
-        filesystem::remove_all(baas_dir);
+        auto baasDir = string(ACCOUNT_PATH) + "/baas";
+        // cout << "create=[" << baasDir << "]" << endl;
+        filesystem::create_directories(baasDir);
+        filesystem::remove_all(baasDir);
         ProgressEvent::instance().setStep(3);
 
-        auto nas_dir = string(ACCOUNT_PATH) + "/nas";
-        // cout << "create=[" << nas_dir << "]" << endl;
-        filesystem::create_directories(nas_dir);
-        filesystem::remove_all(nas_dir);
+        auto nasDir = string(ACCOUNT_PATH) + "/nas";
+        // cout << "create=[" << nasDir << "]" << endl;
+        filesystem::create_directories(nasDir);
+        filesystem::remove_all(nasDir);
         ProgressEvent::instance().setStep(4);
 
-        for (auto& entry: get_dir_contents(ACCOUNT_PATH, ".jpg")) {
+        for (auto& entry: getDirContents(ACCOUNT_PATH, ".jpg")) {
 
-            auto linker_file = baas_dir+"/"+entry.stem().string()+".dat";
-            Generator::instance().write_baas(linker_file);
+            auto linkerFile = baasDir+"/"+entry.stem().string()+".dat";
+            Generator::instance().writeBaas(linkerFile);
 
-            auto profile_dat_filename = nas_dir + "/" + Generator::instance().nas_id_str() + ".dat";
-            Generator::instance().write_profile_dat(profile_dat_filename);
+            auto profileDatFilename = nasDir + "/" + Generator::instance().nasIdStr() + ".dat";
+            Generator::instance().writeProfileDat(profileDatFilename);
 
-            // auto profile = stringReplace(PROFILE, "#NAS_ID#", nas_id_ss.str());
-            auto profile_json_filename = nas_dir + "/" + Generator::instance().nas_id_str() + "_user.json";
-            Generator::instance().write_profile_json(profile_json_filename);
+            auto profileJsonFilename = nasDir + "/" + Generator::instance().nasIdStr() + "_user.json";
+            Generator::instance().writeProfileJson(profileJsonFilename);
         }
         ProgressEvent::instance().setStep(5);
         cout << "Success!" << endl;
 
-        unmount_save_data(acc, true);
+        unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(6);
     }
     catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.
@@ -222,29 +221,29 @@ void link_account()
     }
 }
 
-void unlink_account()
+void unlinkAccount()
 {
     try {
         ProgressEvent::instance().reset();
         ProgressEvent::instance().setTotalSteps(5);
 
-        FsFileSystem acc = mount_save_data();
+        FsFileSystem acc = mountSaveData();
         ProgressEvent::instance().setStep(1);
 
-        execute_backup("unlink");
+        executeBackup("unlink");
         ProgressEvent::instance().setStep(2);
         cout << endl << endl  << "Unlinking accounts... ";
 
-        auto baas_dir = string(ACCOUNT_PATH) + "/baas";
-        filesystem::remove_all(baas_dir);
+        auto baasDir = string(ACCOUNT_PATH) + "/baas";
+        filesystem::remove_all(baasDir);
         ProgressEvent::instance().setStep(3);
 
-        auto nas_dir = string(ACCOUNT_PATH) + "/nas";
-        filesystem::remove_all(nas_dir);
+        auto nasDir = string(ACCOUNT_PATH) + "/nas";
+        filesystem::remove_all(nasDir);
         ProgressEvent::instance().setStep(4);
 
         cout << "Success!" << endl;
-        unmount_save_data(acc, true);
+        unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(5);
     }
     catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.

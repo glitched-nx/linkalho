@@ -19,7 +19,7 @@ static auto PROFILE = R"({"id":"#NAS_ID#","language":"en-US","timezone":"Europe/
 #ifdef USE_GENERATORS
 static mt19937_64 engine(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
 
-const string generate_random_alphanumeric_string(size_t len)
+const string generateRandomAlphanumericString(size_t len)
 {
     static constexpr auto chars =
         "0123456789"
@@ -32,91 +32,91 @@ const string generate_random_alphanumeric_string(size_t len)
     return result;
 }
 
-unsigned long generate_bytes()
+unsigned long generateBytes()
 {
-    uniform_int_distribution<unsigned long> byte_generator(0x0UL, 0xFFFFFFFFFFFFFFFF);
-    return byte_generator(engine);
+    uniform_int_distribution<unsigned long> byteGenerator(0x0UL, 0xFFFFFFFFFFFFFFFF);
+    return byteGenerator(engine);
 }
 #endif
 
-unsigned long generate_nas_id()
+unsigned long generateNasId()
 {
 #ifdef USE_GENERATORS
-    return generate_bytes();
+    return generateBytes();
 #else
     return 0xF12E677EB4021A81UL;
 #endif
 }
 
-unsigned long generate_baas_user_id()
+unsigned long generateBaasUserId()
 {
 #ifdef USE_GENERATORS
-    return generate_bytes();
+    return generateBytes();
 #else
     return 0xDEADC0DE000B00B5UL;
 #endif
 }
 
-const string generate_baas_user_password()
+const string generateBaasUserPassword()
 {
 #ifdef USE_GENERATORS
-    return generate_random_alphanumeric_string(40);
+    return generateRandomAlphanumericString(40);
 #else
     return "NRwtxRNkYIBE6eWoTG5gM4ykMRoYXOdRZhAWC4IF";
 #endif
 }
 
-const string generate_profile_dat()
+const string generateProfileDat()
 {
 #ifdef USE_GENERATORS
-    return generate_random_alphanumeric_string(128);
+    return generateRandomAlphanumericString(128);
 #else
     return string(127, ' ') + '2';
 #endif
 }
 
-string string_replace(const string& str, const string& from, const string& to) {
-    string str_copy = str;
-    size_t start_pos = str_copy.find(from);
-    if(start_pos == string::npos)
+string stringReplace(const string& str, const string& from, const string& to) {
+    string strCopy = str;
+    size_t startPos = strCopy.find(from);
+    if(startPos == string::npos)
         return str;
-    str_copy.replace(start_pos, from.length(), to);
-    return str_copy;
+    strCopy.replace(startPos, from.length(), to);
+    return strCopy;
 }
 
 Generator::Generator()
 {
-    _baas_user_id = generate_baas_user_id();
-    _nas_id = generate_nas_id();
-    stringstream nas_id_ss;
-    nas_id_ss << std::hex << _nas_id;
-    _nas_id_str = nas_id_ss.str();
+    _baasUserId = generateBaasUserId();
+    _nasId = generateNasId();
+    stringstream ss;
+    ss << std::hex << _nasId;
+    _nasIdStr = ss.str();
 }
 
-const string& Generator::nas_id_str() {
-    return _nas_id_str;
+const string& Generator::nasIdStr() {
+    return _nasIdStr;
 }
 
 
-void Generator::write_baas(const string& fullpath)
+void Generator::writeBaas(const string& fullpath)
 {
-    ofstream out_stream(fullpath, ios::binary);
-    out_stream.write(reinterpret_cast<char*>(&BAAS_HEADER1), sizeof(BAAS_HEADER1));
-    out_stream.write(reinterpret_cast<char*>(&BAAS_HEADER2), sizeof(BAAS_HEADER2));
-    out_stream.write(reinterpret_cast<char*>(&_nas_id), sizeof(_nas_id));
-    out_stream.write(reinterpret_cast<char*>(&BAAS_HEADER3), sizeof(BAAS_HEADER3));
-    out_stream.write(reinterpret_cast<char*>(&_baas_user_id), sizeof(_baas_user_id));
-    out_stream << generate_baas_user_password();
+    ofstream ofs(fullpath, ios::binary);
+    ofs.write(reinterpret_cast<char*>(&BAAS_HEADER1), sizeof(BAAS_HEADER1));
+    ofs.write(reinterpret_cast<char*>(&BAAS_HEADER2), sizeof(BAAS_HEADER2));
+    ofs.write(reinterpret_cast<char*>(&_nasId), sizeof(_nasId));
+    ofs.write(reinterpret_cast<char*>(&BAAS_HEADER3), sizeof(BAAS_HEADER3));
+    ofs.write(reinterpret_cast<char*>(&_baasUserId), sizeof(_baasUserId));
+    ofs << generateBaasUserPassword();
 }
 
-void Generator::write_profile_dat(const string& fullpath)
+void Generator::writeProfileDat(const string& fullpath)
 {
-    ofstream out_stream(fullpath, ios::binary);
-    out_stream << generate_profile_dat();
+    ofstream ofs(fullpath, ios::binary);
+    ofs << generateProfileDat();
 }
 
-void Generator::write_profile_json(const string& fullpath)
+void Generator::writeProfileJson(const string& fullpath)
 {
-    ofstream out_stream(fullpath, ios::binary);
-    out_stream << string_replace(PROFILE, "#NAS_ID#", _nas_id_str);
+    ofstream ofs(fullpath, ios::binary);
+    ofs << stringReplace(PROFILE, "#NAS_ID#", _nasIdStr);
 }

@@ -5,7 +5,7 @@
 
 class CustomTheme {
 public:
-    static brls::Theme custom_theme();
+    static brls::Theme LinkalhoTheme();
 };
 
 #endif // __LINKALHO_CUSTOM_THEME_HPP__

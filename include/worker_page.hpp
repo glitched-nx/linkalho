@@ -20,7 +20,7 @@ class WorkerPage : public brls::View
     worker_func_t workerFunc;
 
   public:
-    WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t worker_func);
+    WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc);
     ~WorkerPage();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx) override;

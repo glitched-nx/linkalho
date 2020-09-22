@@ -4,7 +4,7 @@
 #include "progress_event.hpp"
 #include <functional>
 
-WorkerPage::WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t worker_func): frame(frame), workerFunc(worker_func)
+WorkerPage::WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc): frame(frame), workerFunc(workerFunc)
 {
 
     this->progressDisp = new brls::ProgressDisplay();

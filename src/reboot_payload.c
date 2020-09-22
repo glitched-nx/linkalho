@@ -52,13 +52,13 @@ static void inject_payload(void) {
     splSetConfig((SplConfigItem)65001, 2);
 }
 
-bool rebootToPayload(const char* payload_file)
+bool rebootToPayload(const char* payloadFile)
 {
     Result rc = splInitialize();
     if (R_FAILED(rc)) {
         return false;
     } else {
-        FILE *f = fopen(payload_file, "rb");
+        FILE *f = fopen(payloadFile, "rb");
         if (f == NULL) {
             splExit();
             return false;

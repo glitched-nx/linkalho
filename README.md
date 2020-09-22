@@ -29,8 +29,8 @@ Do you like this app and find it useful? You can buy me a coffee clicking the li
 <br>
 
 ### <u>Reboot to payload</u>
-After completing the selectect operation, Linkalho will try to find the best way to reboot to an existing payload:
-- if the user places a any payload in the application's root (`/switch/linkalho/payload.bin`)
+After completing the selected operation, Linkalho will try to find the best way to reboot to an existing payload:
+- if the user places a payload file in the application's root (`/switch/linkalho/payload.bin`)
 - if Atmosphere is detected and `/atmosphere/reboot_payload.bin` exists
 - if ReiNX is detected and `/ReiNX.bin` exists
 - if SXOS is detected it will issue a soft-reboot
