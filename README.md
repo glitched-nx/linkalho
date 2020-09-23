@@ -3,7 +3,7 @@
 [![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
 [![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
 
-<p align="left"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/rdmrocha/linkalho/master/icon.jpg"></p>
 
 # <b>Linkalho</b>
 
