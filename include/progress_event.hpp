@@ -1,5 +1,5 @@
-#ifndef __LINKUSER_PROGRESS_EVENT_HPP__
-#define __LINKUSER_PROGRESS_EVENT_HPP__
+#ifndef __LINKALHO_PROGRESS_EVENT_HPP__
+#define __LINKALHO_PROGRESS_EVENT_HPP__
 
 class ProgressEvent{
 private:
@@ -38,4 +38,4 @@ public:
     inline int getMax() { return _max; }
 };
 
-#endif // __LINKUSER_PROGRESS_EVENT_HPP__
+#endif // __LINKALHO_PROGRESS_EVENT_HPP__

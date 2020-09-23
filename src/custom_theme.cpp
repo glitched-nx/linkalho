@@ -1,6 +1,6 @@
 #include "custom_theme.hpp"
 
-brls::Theme CustomTheme::custom_theme()
+brls::Theme CustomTheme::LinkalhoTheme()
 {
     brls::Theme theme = brls::Theme();
 

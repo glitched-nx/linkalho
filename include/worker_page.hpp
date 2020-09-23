@@ -1,5 +1,5 @@
-#ifndef __LINKUSER_WORKER_PAGE_HPP__
-#define __LINKUSER_WORKER_PAGE_HPP__
+#ifndef __LINKALHO_WORKER_PAGE_HPP__
+#define __LINKALHO_WORKER_PAGE_HPP__
 
 #include <borealis.hpp>
 #include <thread>
@@ -20,7 +20,7 @@ class WorkerPage : public brls::View
     worker_func_t workerFunc;
 
   public:
-    WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t worker_func);
+    WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc);
     ~WorkerPage();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx) override;
@@ -32,4 +32,4 @@ class WorkerPage : public brls::View
     void willDisappear(bool resetState = false) override;
 };
 
-#endif // __LINKUSER_WORKER_PAGE_HPP__
+#endif // __LINKALHO_WORKER_PAGE_HPP__

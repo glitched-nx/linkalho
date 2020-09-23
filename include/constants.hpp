@@ -1,7 +1,7 @@
-#ifndef __LINKUSER_CONSTANTS_HPP__
-#define __LINKUSER_CONSTANTS_HPP__
+#ifndef __LINKALHO_CONSTANTS_HPP__
+#define __LINKALHO_CONSTANTS_HPP__
 
-//#define DEBUG
+// #define DEBUG
 #define USE_GENERATORS
 #define LOCAL_PATH "sdmc:/switch/" APP_TITLE_LOWER "/"
 #define BACKUP_PATH LOCAL_PATH "backups/"
@@ -15,5 +15,8 @@
 #endif
 # define RESTORE_PATH ACCOUNT_PATH
 
+#define AMS_PAYLOAD "sdmc:/atmosphere/reboot_payload.bin"
+#define REINX_PAYLOAD "sdmc:/ReiNX.bin"
+#define CUSTOM_PAYLOAD LOCAL_PATH "payload.bin"
 
-#endif // __LINKUSER_CONSTANTS_HPP__
+#endif // __LINKALHO_CONSTANTS_HPP__

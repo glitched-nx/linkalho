@@ -1,18 +1,24 @@
+#include <switch.h>
 #include "confirm_page.hpp"
 #include <borealis.hpp>
 #include "utils.hpp"
 #include <algorithm>
+#include "reboot_payload.h"
 
-ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text, bool reboot): reboot(reboot)
+ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed): reboot(reboot), canUseLed(canUseLed)
 {
-    this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS: brls::ButtonStyle::PLAIN))->setLabel(reboot ? "Reboot": "Continue");
+    auto payloadFile = getPayload();
+
+    this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS: brls::ButtonStyle::PLAIN))->setLabel(reboot ? (payloadFile.empty() ? "Reboot" : "Reboot to payload"): "Continue");
 
     this->button->setParent(this);
-    this->button->getClickEvent()->subscribe([frame, this](View* view) {
+    this->button->getClickEvent()->subscribe([frame, this, payloadFile](View* view) {
         if (!frame->isLastStage())
             frame->nextStage();
         else if (this->reboot) {
-            attempt_reboot();
+            if (payloadFile.empty() || !rebootToPayload(payloadFile.c_str())) {
+                attemptForceReboot();
+            }
             brls::Application::popView();
         }
     });
@@ -72,6 +78,23 @@ void ConfirmPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* st
     this->button->invalidate();
 
     start = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(150);
+    if (this->canUseLed) {
+        if (!this->reboot) {
+            HidsysNotificationLedPattern pattern = getBreathePattern();
+            sendLedPattern(pattern);
+        } else {
+            HidsysNotificationLedPattern pattern = getConfirmPattern();
+            sendLedPattern(pattern);
+        }
+    }
+}
+
+void ConfirmPage::willDisappear(bool resetState)
+{
+    if (!this->reboot) {
+        HidsysNotificationLedPattern pattern = getClearPattern();
+        sendLedPattern(pattern);
+    }
 }
 
 ConfirmPage::~ConfirmPage()

@@ -5,7 +5,7 @@
 
 class CustomStyle {
 public:
-    static brls::Style custom_style();
+    static brls::Style LinkalhoStyle();
 };
 
 #endif // __CUSTOM_STYLE_HPP__

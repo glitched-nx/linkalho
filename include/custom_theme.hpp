@@ -1,11 +1,11 @@
-#ifndef __LINKUSER_CUSTOM_THEME_HPP__
-#define __LINKUSER_CUSTOM_THEME_HPP__
+#ifndef __LINKALHO_CUSTOM_THEME_HPP__
+#define __LINKALHO_CUSTOM_THEME_HPP__
 
 #include <borealis/theme.hpp>
 
 class CustomTheme {
 public:
-    static brls::Theme custom_theme();
+    static brls::Theme LinkalhoTheme();
 };
 
-#endif // __LINKUSER_CUSTOM_THEME_HPP__
+#endif // __LINKALHO_CUSTOM_THEME_HPP__
