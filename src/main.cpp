@@ -127,7 +127,25 @@ int main(int argc, char* argv[])
         operationList->addView(dialogItem);
     }
 
-    brls::ListItem* backupItem = new brls::ListItem("Create manual backup");
+    stringstream info_ss;
+    auto os = getRunningOS();
+    if (!os.empty()) {
+        info_ss << os << " detected" << endl;
+    }
+
+    if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
+        s32 acc_count = 0;
+        accountGetUserCount(&acc_count);
+        accountExit();
+        if (acc_count > 0) {
+            info_ss << "Found " << acc_count << " account" << (acc_count == 1 ? "" : "s") << endl;
+        }
+    }
+
+    info_ss << "Restore file " << (backupExists ? "" : "not ") << "found" << endl;
+    info_ss << "Reboot to payload " << (getPayload().empty() ? "in" : "" ) << "active";
+
+    brls::ListItem* backupItem = new brls::ListItem("Create manual backup", info_ss.str());
     backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("Create manual backup");

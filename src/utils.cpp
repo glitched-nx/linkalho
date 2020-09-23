@@ -122,5 +122,16 @@ const std::string getPayload()
         payloadPath = REINX_PAYLOAD;
     }
     return (!payloadPath.empty() && std::filesystem::exists(payloadPath)) ? payloadPath : "";
+}
 
+const std::string getRunningOS()
+{
+    if (isSXOS()) {
+        return "SXOS";
+    } else if (isAtmosphere()) {
+        return "Atmosphere";
+    } else if (isReiNX()) {
+        return "ReiNX";
+    }
+    return "";
 }

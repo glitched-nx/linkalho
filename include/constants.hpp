@@ -1,7 +1,7 @@
 #ifndef __LINKALHO_CONSTANTS_HPP__
 #define __LINKALHO_CONSTANTS_HPP__
 
-//#define DEBUG
+// #define DEBUG
 #define USE_GENERATORS
 #define LOCAL_PATH "sdmc:/switch/" APP_TITLE_LOWER "/"
 #define BACKUP_PATH LOCAL_PATH "backups/"
