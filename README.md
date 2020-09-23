@@ -51,7 +51,7 @@ This operation creates a backup in `/switch/linkalho/backups`
 - Restores any previous state from a backup file. The file must be places in `/switch/linkalho/restore/restore.zip`
 This operation creates a backup in `/switch/linkalho/backups`
 
-### <u>Backup accounts</u>
+### <u>Create manual backup</u>
 - Will create a backup in `/switch/linkalho/backups`.
 All linking and unlinking operations will produce a backup before making changes.
 <b>You should only use this option if you want to manually create a backup!</b>
