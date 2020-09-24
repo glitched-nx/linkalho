@@ -8,6 +8,6 @@ bool initDirs();
 void linkAccount();
 void unlinkAccount();
 void restoreBackup(const std::string& backupFullpath);
-void executeBackup(const std::string& reason, bool progress=false);
+void manualBackup();
 
 #endif // __LINKALHO_FILE_OPERATIONS_HPP__

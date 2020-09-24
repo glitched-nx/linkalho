@@ -100,16 +100,9 @@ void unmountSaveData(FsFileSystem& acc, bool commit=false)
 #endif
 }
 
-void executeBackup(const string& reason, bool progress=false)
+void executeBackup(const string& reason)
 {
-    if (progress) {
-        ProgressEvent::instance().reset();
-        ProgressEvent::instance().setTotalSteps(2);
-    }
     cleanupMacFiles(RESTORE_PATH);
-    if (progress) {
-        ProgressEvent::instance().setStep(1);
-    }
 
     time_t t = time(nullptr);
     tm tm = *localtime(&t);
@@ -124,9 +117,6 @@ void executeBackup(const string& reason, bool progress=false)
     zipper.add(string(ACCOUNT_PATH)+"/nas");
     zipper.close();
     cout << "Backup created in " << BACKUP_PATH << endl;
-    if (progress) {
-        ProgressEvent::instance().setStep(2);
-    }
 }
 
 void restoreBackup(const string& backupFullpath)
@@ -245,6 +235,28 @@ void unlinkAccount()
         cout << "Success!" << endl;
         unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(5);
+    }
+    catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.
+    {
+        cout << "Failed! " << e.what() << endl;
+        brls::Application::crash(string("Failed! ") + e.what());
+    }
+}
+
+void manualBackup()
+{
+    try {
+        ProgressEvent::instance().reset();
+        ProgressEvent::instance().setTotalSteps(3);
+
+        FsFileSystem acc = mountSaveData();
+        ProgressEvent::instance().setStep(1);
+
+        executeBackup("manual");
+        cout << "Success!" << endl;
+
+        unmountSaveData(acc, true);
+        ProgressEvent::instance().setStep(3);
     }
     catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.
     {

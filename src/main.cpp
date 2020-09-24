@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Backing up...", [](){
-                executeBackup("manual", true);
+                manualBackup();
             })
         );
         stagedFrame->addStage(
