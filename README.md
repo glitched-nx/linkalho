@@ -1,8 +1,11 @@
+[![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
+
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/)
+
 [![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
 [![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/latest/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
-[![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
+
 
 <p align="left"><img src="icon.jpg"></p>
 
@@ -78,5 +81,5 @@ All linking and unlinking operations will produce a backup before making changes
   - [sebastiandev (zipper wrapper for minizip)](https://github.com/sebastiandev/zipper/) for their nice wrapper to the minizip
   - [Kronos2308](https://github.com/Kronos2308) for the help in the initial phases of research.
   - [SciresM](https://github.com/SciresM) for his "reboot to payload" code and [HamletDuFromage](https://github.com/HamletDuFromage) for the code contributions
-  - **stick2target** for the icon, the beta testing and for supplying crucial files that helped in the creation of the generators.
+  - **target** for the icon, the beta testing and for supplying crucial files that helped in the creation of the generators.
   - **boredomisacrime** for the beta testing.
