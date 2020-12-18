@@ -26,6 +26,21 @@ Do you like this app and find it useful? You can buy me a coffee clicking the li
 
 <br>
 
+## <b>Frequently Asked Questions</b>:
+- Why can't I choose which account to link/unlink?
+  - This feature is not planned due to the extra complexity of the eventual cleanup process for previously linked accounts. If someone wants to contribute with a PR for it, I'll gladly review it and merge it into the app.
+
+- Why can't I navigate the app via touchscreen or using the thumbs ticks?
+  - This is a very simple and straightforward app that most users will only use once or twice. Unless Borealis developers implement this natively, there are no plans for me to extend their feature set.
+
+- Can I go online with a fake/generated linked account?
+  - No! You have a hacked switch. Online is always a risk.
+
+- Can this app do "place whatever question here"?
+  - You can start by reading the [previous section](https://github.com/rdmrocha/linkalho#why-do-i-need-this-app). This app will allow you to link/unlink a fake/generated NNID to your user accounts without the need for an internet connection, and that's it. If you still fail to understand what this is and it's purpose, it's highly likely that you simply don't need this app. Worry not: if you ever need it, you'll know it.
+
+<br>
+
 ## <b>Installation</b>:
 - Place the .nro file in the `/switch/linkalho` folder of your SDcard.
 - Go to the homebrew app and run Linkalho
