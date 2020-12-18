@@ -44,7 +44,7 @@ DATA		:=	data
 INCLUDES	:=	include libs/zipper/include
 APP_TITLE   :=  Linkalho
 APP_AUTHOR  :=  rrocha
-APP_VERSION :=  1.0.3
+APP_VERSION :=  1.0.4
 # ROMFS		:=	romfs
 
 # ROMFS				:=	libs/borealis/resources

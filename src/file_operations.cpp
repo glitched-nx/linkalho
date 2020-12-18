@@ -18,11 +18,17 @@ using namespace zipper;
 
 void shutdownAccount()
 {
-    cout << "Attempting to shut down account and olsc... ";
-    bool success = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000001E));
-    cout << (success ? "Succeess!" : "Failed! Already terminated?") << endl;
+    cout << "Attempting to shut down BCAT, account and olsc... ";
+    bool success_bcat = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000000C));  // BCAT
+    bool success_account = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000001E));  // ACCOUNT
+    if (success_account && success_bcat) {
+        cout << "Success!" << endl;
+    } else {
+        cout << "BCAT: " << (success_bcat ? "success!" : "Failed!") << endl;
+        cout << "ACCOUNT: " << (success_account ? "success!" : "Failed!") << endl;
+    }
     //helps a bit
-    pmshellTerminateProgram(0x010000000000003E);
+    pmshellTerminateProgram(0x010000000000003E);  // OLSC
 }
 
 vector<filesystem::path> getDirContents(const string& path, const string& extension, bool onlydirs=false)
