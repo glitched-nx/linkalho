@@ -71,10 +71,10 @@ HidsysNotificationLedPattern getClearPattern()
 
 void sendLedPattern(HidsysNotificationLedPattern pattern)
 {
-    s32 totalEntries;
-    u64 uniquePadIds[2];
+    s32 totalEntries = 0;
+    HidsysUniquePadId uniquePadIds[2] = {0};
     memset(uniquePadIds, 0, sizeof(uniquePadIds));
-    Result res = hidsysGetUniquePadsFromNpad(hidGetHandheldMode() ? CONTROLLER_HANDHELD : CONTROLLER_PLAYER_1, uniquePadIds, 2, &totalEntries);
+    Result res = hidsysGetUniquePadsFromNpad(HidNpadIdType_Handheld, uniquePadIds, 2, &totalEntries);
     if (R_SUCCEEDED(res)) {
         for (auto i = 0; i < totalEntries; ++i) {
             hidsysSetNotificationLedPattern(&pattern, uniquePadIds[i]);
