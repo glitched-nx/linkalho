@@ -107,21 +107,7 @@ inline bool isSXOS() { return isServiceRunning("tx"); }
 const std::string getPayload()
 {
     // if an override payload exists, boot from it
-    if (std::filesystem::exists(CUSTOM_PAYLOAD)) {
-        return CUSTOM_PAYLOAD;
-    }
-
-    if (isSXOS()) {
-        // cannot chainload to bood.dat directly. if SXOS and no "payload.bin", force reboot
-        return "";
-    }
-    std::string payloadPath("");
-    if (isAtmosphere()) {
-        payloadPath = AMS_PAYLOAD;
-    } else if (isReiNX()) {
-        payloadPath = REINX_PAYLOAD;
-    }
-    return (!payloadPath.empty() && std::filesystem::exists(payloadPath)) ? payloadPath : "";
+    return isErista() && std::filesystem::exists(CUSTOM_PAYLOAD) ? CUSTOM_PAYLOAD : "";
 }
 
 const std::string getRunningOS()
@@ -134,4 +120,22 @@ const std::string getRunningOS()
         return "ReiNX";
     }
     return "";
+}
+
+bool isErista() {
+    /**
+     * Icosa = 0,   // Erista retail
+     * Copper = 1,  // Erista prototype
+     * Hoag = 2,    // Mariko Lite Retail for 8.0.0+, Invalid for 1.0.0-7.0.1
+     * Iowa = 3,    // Mariko retail for 4.0.0+
+     * Calcio = 4,  // Mariko prototype for 8.0.0+
+     * Five = 5,    // Aula for 10.0.0+
+    */
+
+    if(splInitialize() != 0) return false;
+    u64 hwType = 15;  // invalid
+    Result rc = splGetConfig(SplConfigItem_HardwareType, &hwType);
+    splExit();
+
+    return R_SUCCEEDED(rc) && hwType <=1;
 }
