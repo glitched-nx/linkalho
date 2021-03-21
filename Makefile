@@ -40,6 +40,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 TARGET		:=	linkalho
 BUILD		:=	build
 SOURCES		:=	src libs/zipper/src
+RESOURCES	:=	resources
 DATA		:=	data
 INCLUDES	:=	include libs/zipper/include
 APP_TITLE   :=  Linkalho
@@ -47,9 +48,9 @@ APP_AUTHOR  :=  rrocha
 APP_VERSION :=  1.0.5
 # ROMFS		:=	romfs
 
-# ROMFS				:=	libs/borealis/resources
+ROMFS				:=	resources
 BOREALIS_PATH		:=	libs/borealis
-# BOREALIS_RESOURCES	:=	romfs:/
+BOREALIS_RESOURCES	:=	romfs:/
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -77,7 +78,7 @@ LIBS	:= -lnx -lminizip -lz
 #---------------------------------------------------------------------------------
 LIBDIRS	:= $(PORTLIBS) $(LIBNX)
 
-include $(TOPDIR)/libs/borealis/library/borealis.mk
+include $(TOPDIR)/$(BOREALIS_PATH)/library/borealis.mk
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -166,12 +167,17 @@ ifneq ($(ROMFS),)
 	export NROFLAGS += --romfsdir=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: $(BUILD) clean all
+.PHONY: $(BUILD) $(ROMFS) clean all
 
 #---------------------------------------------------------------------------------
 all: $(BUILD)
 
-$(BUILD):
+$(ROMFS):
+	@[ -d $@ ] || mkdir -p $@
+	@echo Preparing ROMFS...
+	@find $(CURDIR)/$(ROMFS) -type f | grep -v json | xargs rm -r
+
+$(BUILD): $(ROMFS)
 	@[ -d $@ ] || mkdir -p $@
 	@MSYS2_ARG_CONV_EXCL="-D;$(MSYS2_ARG_CONV_EXCL)" $(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
