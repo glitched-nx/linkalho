@@ -107,7 +107,7 @@ inline bool isSXOS() { return isServiceRunning("tx"); }
 const std::string getPayload()
 {
     // if an override payload exists, boot from it
-    return isErista() && std::filesystem::exists(CUSTOM_PAYLOAD) ? CUSTOM_PAYLOAD : "";
+    return std::filesystem::exists(CUSTOM_PAYLOAD_FILE_PATH) ? CUSTOM_PAYLOAD_FILE_PATH : "";
 }
 
 const std::string getRunningOS()
@@ -122,7 +122,7 @@ const std::string getRunningOS()
     return "";
 }
 
-bool isErista() {
+HardwareType getHardwareType() {
     /**
      * Icosa = 0,   // Erista retail
      * Copper = 1,  // Erista prototype
@@ -132,10 +132,40 @@ bool isErista() {
      * Five = 5,    // Aula for 10.0.0+
     */
 
-    if(splInitialize() != 0) return false;
+    if (splInitialize() != 0) return UnknownHardware;
     u64 hwType = 15;  // invalid
     Result rc = splGetConfig(SplConfigItem_HardwareType, &hwType);
     splExit();
 
-    return R_SUCCEEDED(rc) && hwType <=1;
+    if (R_FAILED(rc)) return UnknownHardware;
+
+    switch (hwType) {
+        case 0:
+        case 1:
+            return Erista;
+        case 2:
+        case 3:
+        case 4:
+            return Mariko;
+        case 5:
+            return Aula;
+    }
+    return UnknownHardware;
+}
+
+bool isErista() {
+    return getHardwareType() == Erista;
+}
+
+const std::string getHardwareName(HardwareType hwType) {
+    switch (hwType) {
+        case Erista:
+            return "Erista";
+        case Mariko:
+            return "Mariko";
+        default:
+            break;
+    }
+    // Aula hardware is still "unknown"
+    return "Unknown Hardware";
 }

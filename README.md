@@ -49,7 +49,7 @@ Do you like this app and find it useful? You can buy me a coffee clicking the li
 
 ### <u>Reboot to payload</u>
 After completing the selected operation, Linkalho will reboot to an existing payload if:
-- the console hardware is Erista and the user places a payload file in the application's root (`/switch/linkalho/payload.bin`)
+- the console hardware is Erista and the user places a payload file in the application's root (`/switch/linkalho/reboot.bin`)
 
 Reboot to payload is not supported on Mariko hardware!
 <br>

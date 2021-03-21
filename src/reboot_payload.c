@@ -54,6 +54,7 @@ static void inject_payload(void) {
 
 bool rebootToPayload(const char* payloadFile)
 {
+#ifndef DEBUG
     Result rc = splInitialize();
     if (R_FAILED(rc)) {
         return false;
@@ -68,5 +69,6 @@ bool rebootToPayload(const char* payloadFile)
         inject_payload();
         splExit();
     }
+#endif
     return true;
 }

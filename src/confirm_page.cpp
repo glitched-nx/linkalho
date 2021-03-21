@@ -9,14 +9,14 @@ ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text
 {
     auto payloadFile = getPayload();
 
-    this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS: brls::ButtonStyle::PLAIN))->setLabel(reboot ? (payloadFile.empty() ? "Reboot" : "Reboot to payload"): "Continue");
+    this->button = (new brls::Button(brls::ButtonStyle::BORDERLESS))->setLabel(reboot ? (payloadFile.empty() ? "Reboot" : "Reboot to payload"): "Continue");
 
     this->button->setParent(this);
     this->button->getClickEvent()->subscribe([frame, this, payloadFile](View* view) {
         if (!frame->isLastStage())
             frame->nextStage();
         else if (this->reboot) {
-            if (payloadFile.empty() || !rebootToPayload(payloadFile.c_str())) {
+            if (!isErista() || payloadFile.empty() || !rebootToPayload(payloadFile.c_str())) {
                 attemptForceReboot();
             }
             brls::Application::popView();

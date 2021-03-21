@@ -1,7 +1,7 @@
 #ifndef __LINKALHO_CONSTANTS_HPP__
 #define __LINKALHO_CONSTANTS_HPP__
 
-// #define DEBUG
+#define DEBUG
 #define USE_GENERATORS
 #define LOCAL_PATH "sdmc:/switch/" APP_TITLE_LOWER "/"
 #define BACKUP_PATH LOCAL_PATH "backups/"
@@ -15,6 +15,7 @@
 #endif
 # define RESTORE_PATH ACCOUNT_PATH
 
-#define CUSTOM_PAYLOAD LOCAL_PATH "payload.bin"
+#define CUSTOM_PAYLOAD_FILE "reboot.bin"
+#define CUSTOM_PAYLOAD_FILE_PATH LOCAL_PATH CUSTOM_PAYLOAD_FILE
 
 #endif // __LINKALHO_CONSTANTS_HPP__

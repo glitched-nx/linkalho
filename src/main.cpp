@@ -143,7 +143,13 @@ int main(int argc, char* argv[])
     }
 
     info_ss << "Restore file " << (backupExists ? "" : "not ") << "found" << endl;
-    info_ss << "Reboot to payload " << (getPayload().empty() ? "in" : "" ) << "active";
+    HardwareType hwType = getHardwareType();
+    info_ss << getHardwareName(hwType) << " detected";
+    if (hwType != Erista) {
+        info_ss << " (reboot to payload disabled)" << endl;
+    } else {
+        info_ss << endl << "Reboot to payload " << (getPayload().empty() ? "in" : "" ) << "active";
+    }
 
     brls::ListItem* backupItem = new brls::ListItem("Create manual backup", info_ss.str());
     backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
