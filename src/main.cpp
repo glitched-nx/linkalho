@@ -8,8 +8,7 @@
 #include "worker_page.hpp"
 #include "file_operations.hpp"
 #include "constants.hpp"
-#include "custom_style.hpp"
-#include "custom_theme.hpp"
+#include "visual_overrides.hpp"
 #include "progress_event.hpp"
 #include "utils.hpp"
 
@@ -25,7 +24,12 @@ int main(int argc, char* argv[])
     }
     initDirs();
 
-    if (!brls::Application::init(APP_TITLE_LOWER, CustomStyle::LinkalhoStyle(), CustomTheme::LinkalhoTheme()))
+    brls::i18n::loadTranslations();
+
+    auto linkalhoStyle = VisualOverrides::LinkalhoStyle();
+    auto linkalhoTheme = VisualOverrides::LinkalhoTheme();
+
+    if (!brls::Application::init(APP_TITLE_LOWER, linkalhoStyle, linkalhoTheme))
     {
         brls::Logger::error(string("Unable to init ") + APP_TITLE);
         return EXIT_FAILURE;
@@ -143,7 +147,18 @@ int main(int argc, char* argv[])
     }
 
     info_ss << "Restore file " << (backupExists ? "" : "not ") << "found" << endl;
-    info_ss << "Reboot to payload " << (getPayload().empty() ? "in" : "" ) << "active";
+    HardwareType hwType = getHardwareType();
+    info_ss << getHardwareName(hwType) << " detected";
+    if (hwType != Erista) {
+        info_ss << " (reboot to payload disabled)" << endl;
+    } else {
+        info_ss << endl << "Reboot to payload ";
+        if (getPayload().empty()) {
+            info_ss << "inactive (" << CUSTOM_PAYLOAD_FILE << " not found)";
+        } else {
+            info_ss << "active";
+        }
+    }
 
     brls::ListItem* backupItem = new brls::ListItem("Create manual backup", info_ss.str());
     backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {

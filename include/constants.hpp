@@ -15,8 +15,7 @@
 #endif
 # define RESTORE_PATH ACCOUNT_PATH
 
-#define AMS_PAYLOAD "sdmc:/atmosphere/reboot_payload.bin"
-#define REINX_PAYLOAD "sdmc:/ReiNX.bin"
-#define CUSTOM_PAYLOAD LOCAL_PATH "payload.bin"
+#define CUSTOM_PAYLOAD_FILE "reboot.bin"
+#define CUSTOM_PAYLOAD_FILE_PATH LOCAL_PATH CUSTOM_PAYLOAD_FILE
 
 #endif // __LINKALHO_CONSTANTS_HPP__
