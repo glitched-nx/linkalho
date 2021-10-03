@@ -9,13 +9,13 @@
 void attemptForceReboot()
 {
 #ifndef DEBUG
-    Result rc = bpcInitialize();
+    Result rc = spsmInitialize();
     if (R_FAILED(rc))
-        printf("bpcInit: %08X\n", rc);
+        printf("spsmInit: %08X\n", rc);
     else
     {
-        bpcRebootSystem();
-        bpcExit();
+        spsmShutdown(true);
+        spsmExit();
     }
 #else
     std::cout << "Reboot would happen here" << std::endl;
