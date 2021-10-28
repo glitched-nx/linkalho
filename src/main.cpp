@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Link all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
+            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be overwritten!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Linking...", [](){
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Unlink all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previosly linked NNID account, it will be erased!", false, canUseLed)
+            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
             new WorkerPage(stagedFrame, "Unlinking...", [](){
