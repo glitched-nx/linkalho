@@ -1,7 +1,12 @@
 #include <switch.h>
+#include <borealis.hpp>
+#include "country_select_view.hpp"
+#include "restore_backup_view.hpp"
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <borealis.hpp>
 #include <string>
 #include <sys/stat.h>
 #include "confirm_page.hpp"
@@ -12,13 +17,14 @@
 #include "progress_event.hpp"
 #include "utils.hpp"
 #include <iostream>
-#include "country_list.hpp"
+// #include "country_list.hpp"
 #include <bit>
 
 #include <ranges>
 #include <vector>
 
 using namespace std;
+using namespace brls::i18n::literals;
 
 std::string FormatHex128(AccountUid Number){
 	auto ptr = reinterpret_cast<u8*>(Number.uid);
@@ -119,66 +125,20 @@ int main(int argc, char* argv[])
 
     brls::i18n::loadTranslations();
 
-    std::vector<std::string> keys;
-    keys.reserve(COUNTRIES.size());
-    for(const auto& c : COUNTRIES){
-        keys.emplace_back(c.first);
-    }
+    // std::vector<std::string> keys;
+    // keys.reserve(COUNTRIES.size());
+    // for(const auto& c : COUNTRIES){
+    //     keys.emplace_back(c.first);
+    // }
 
     // for(const auto& k : keys){
     //     std::cout << k << std::endl;
     // }
-    std::cout << "Portugal: " << getOrDefault(COUNTRIES, "Portugal", "SHOULD_HAVE_BEEN_PT") << std::endl;
-    std::cout << "NotPortugal: " << getOrDefault(COUNTRIES, "NotPortugal", "DEFAUT_PT") << std::endl;
+    // std::cout << "Portugal: " << getOrDefault(COUNTRIES, "Portugal", "SHOULD_HAVE_BEEN_PT") << std::endl;
+    // std::cout << "NotPortugal: " << getOrDefault(COUNTRIES, "NotPortugal", "DEFAUT_PT") << std::endl;
     std::cout << "locale: " << getLanguage() << std::endl;
     std::cout << "timezone: " << getTimezone() << std::endl;
 
-    // bool success_bcat = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000000C));  // BCAT
-    // bool success_account = R_SUCCEEDED(pmshellTerminateProgram(0x010000000000001E));  // ACCOUNT
-    // // if (success_account && success_bcat) {
-    // if (success_account) {
-    //     cout << "Success!" << endl;
-    // } else {
-    //     // cout << "BCAT: " << (success_bcat ? "success!" : "Failed!") << endl;
-    //     cout << "ACCOUNT: " << (success_account ? "success!" : "Failed!") << endl;
-    // }
-
-
-    // uint64_t pid = 0;
-    // NcmProgramLocation location = {0x010000000000001E, NcmStorageId_BuiltInSystem};
-    // NcmProgramLocation loc = {
-    //         .program_id = 0x010000000000001E,
-    //         .storageID = NcmStorageId_BuiltInSystem,
-    //         .pad = {}
-    //     };
-    // Result res = pmshellLaunchProgram(0, &location, &pid);
-    // if (R_FAILED(res)) {
-    //     cout << "pmshellLaunchProgram fail" << endl;
-    // } else {
-    //     cout << "pmshellLaunchProgram success" << endl;
-    // }
-
-    // if (R_SUCCEEDED(setInitialize()))
-    // if (R_SUCCEEDED(setsysInitialize())) {
-    //     s32 max_entries=512;
-    //     SetSysAccountOnlineStorageSettings* ss = (SetSysAccountOnlineStorageSettings*)malloc(max_entries*sizeof(SetSysAccountOnlineStorageSettings));
-    //     s32 total_out = 1;
-    //     if (R_SUCCEEDED(setsysGetAccountOnlineStorageSettings(&total_out, ss, max_entries))) {
-    //         std::cout << "total: " << total_out << std::endl;
-    //         for (s32 i = 0; i < total_out; ++i) {
-    //             SetSysAccountOnlineStorageSettings set = ss[i];
-    //             auto uid = set.uid;
-    //             std::cout << "extracted: ";
-    //             std::cout << std::hex << (uid.uid[0] & 0xffffffff) << "-";
-    //             std::cout << ((uid.uid[0] >> 32) & 0xffff) << "-" << ((uid.uid[0] >> 48) & 0xffff) << "-";
-    //             std::cout << (uid.uid[1] & 0xff) << ((uid.uid[1] >> 8) & 0xff) << "-";
-    //             std::cout << std::hex << ((uid.uid[1] >> 32) & 0xffffffff) << ((uid.uid[1] >> 16) & 0xffff) << std::endl;
-    //         }
-    //     } else {
-    //         std::cout << "nope" << std::endl;
-    //     }
-    // } else
-    //     std::cout << "nope2" << std::endl;
     if (R_SUCCEEDED(accountInitialize(AccountServiceType_Administrator))) {
         AccountUid* uids = new AccountUid[ACC_USER_LIST_SIZE];
         s32 userCount = 0;
@@ -189,70 +149,29 @@ int main(int argc, char* argv[])
                 u8* iconBuffer;
                 u32 imageSize, realSize;
                 AccountUid uid = uids[i];
-
-
-
-                // FsFileSystem acc;
-                // if(R_SUCCEEDED(fsOpen_SystemSaveData(&acc, FsSaveDataSpaceId_User, 0x8000000000000010, uid))) {
-                //     cout << "Succeess fsOpen_SystemSaveData!" << endl;
-                //     if(R_SUCCEEDED(fsdevMountDevice("account", acc))) {
-                //         cout << "Succeess fsdevMountDevice!" << endl;
-                //     } else {
-                //         cout << "Failed fsdevMountDevice!" << endl;
-                //     }
-                //     if (R_SUCCEEDED(fsdevUnmountDevice("account"))) {
-                //         cout << "fsdevUnmountDevice successful!" << endl;
-                //     } else {
-                //         cout << "fsdevUnmountDevice failed!" << endl;
-                //     }
-                //     fsFsClose(&acc);
-                // } else {
-                //     cout << "Failed fsOpen_SystemSaveData!" << endl;
-                // }
-
-
                 // Lookup and cache the users details
                 AccountProfile profile;
                 AccountProfileBase profileBase = {};
-                // AccountUserData userdata = {};
                 if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) /*&& R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL && R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))*/) {
                 // if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) /*&& R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL && R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))*/) {
                     auto username = std::string(profileBase.nickname, 0x20);
                     std::cout << std::endl;
-                    // std::cout << std::endl;
-                    // std::cout << std::endl;
-                    // std::cout << std::endl;
-                    // std::cout << std::endl;
-                    // std::cout << "found username: " << username << std::endl;
-                    // std::cout << "working..........................." << std::endl;
-                    // std::cout << "retrying........" << std::endl;
-                    // std::cout << "expected: " << "ce3f7d3d-3217-1000-ad1b-fecd2b82c289" << std::endl;
                     std::cout << std::hex << (uid.uid[0] & 0xffffffff) << "-";
                     std::cout << ((uid.uid[0] >> 32) & 0xffff) << "-" << ((uid.uid[0] >> 48) & 0xffff) << "-";
                     std::cout << (uid.uid[1] & 0xff) << ((uid.uid[1] >> 8) & 0xff) << "-";
                     std::cout << std::hex << ((uid.uid[1] >> 32) & 0xffffffff) << ((uid.uid[1] >> 16) & 0xffff) << std::endl;
                     std::cout << "profileBase.nickname: " << username << std::endl;
                     // std::cout << "pixa: " << FormatHex128(uid) << endl;
-                    // std::cout << "entrypoint achieved! pwned!" << std::endl;
-
-                    // std::cout << (R_SUCCEEDED(accountTrySelectUserWithoutInteraction(&uid, true)) ? "linked" : "not linked") << std::endl;
-                    // std::cout << (R_SUCCEEDED(accountTrySelectUserWithoutInteraction(&uid, false)) ? "linked2" : "not linked2") << std::endl;
-                    // std::cout << "profileBase.lastEditTimestamp: " << profileBase.lastEditTimestamp << std::endl;
-                    // std::cout << "userdata.unk_x0: " << std::setfill('0') << std::setw(0x32) << std::hex << userdata.unk_x0 << std::endl;
-                    // std::cout << "userdata.unk_x9: " << std::setfill('0') << std::setw(0x7) << std::hex << userdata.unk_x9 << std::endl;
-                    // std::cout << "userdata.unk_x20: " << std::setfill('0') << std::setw(0x60) << std::hex << userdata.unk_x20 << std::endl;
-                    // std::cout << "userdata.miiID : " << std::setfill('~') << std::setw(64) << std::hex << userdata.miiID << std::endl;
-                    // std::cout << "userdata.unk_x20: " << std::setfill('~') << std::setw(64) << std::hex << userdata.unk_x20 << std::endl;
                     accountProfileClose(&profile);
                 }
                 const auto linked_info = GetUserLinkedInfo(uid);
-                std::cout << "account_id: " << hex << linked_info.account_id << endl;
-                std::cout << "nintendo_account_id: " << hex << linked_info.nintendo_account_id << endl;
+                std::cout << "account_id: " << linked_info.account_id << endl;
+                std::cout << "nintendo_account_id: " << linked_info.nintendo_account_id << endl;
                 std::cout << "profileBase.islinked: " << (IsLinked(uid) ? "linked" : "not linked") << std::endl;
-                if (linked_info.nintendo_account_id == 0x7141f86639a6b8a0) {
-                    cout <<  "apagar" << hex << linked_info.nintendo_account_id << endl;
-                    UnlinkLocally(uid);
-                }
+                // if (linked_info.nintendo_account_id == 0x7141f86639a6b8a0) {
+                //     cout <<  "apagar" << hex << linked_info.nintendo_account_id << endl;
+                //     UnlinkLocally(uid);
+                // }
             }
         }
 
@@ -273,6 +192,12 @@ int main(int argc, char* argv[])
 
     brls::AppletFrame* rootFrame = new brls::AppletFrame(false, false);
     rootFrame->setTitle(string(APP_TITLE) + " v" + string(APP_VERSION));
+    if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
+        s32 acc_count = 0;
+        accountGetUserCount(&acc_count);
+        accountExit();
+        // rootFrame->setFooterText(fmt::format("translations/main_menu/footer_text"_i18n, acc_count, (acc_count == 1 ? "" : "s")));
+    }
 
     brls::List* operationList = new brls::List();
 
@@ -326,77 +251,10 @@ int main(int argc, char* argv[])
     });
     operationList->addView(unlinkItem);
 
-    struct stat buffer;
-    bool backupExists = (stat(RESTORE_FILE_PATH, &buffer) == 0);
-    if (backupExists) {
-        brls::ListItem* restoreItem = new brls::ListItem("Restore backup");
-        restoreItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
-            brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-            stagedFrame->setTitle("Restore backup");
+    auto restoreBackupView = new RestoreBackupView(canUseLed);
+    operationList->addView(restoreBackupView);
 
-            stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "Restoring this backup WILL overwrite all files!\n(Your saves will be preserved)\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!", false, canUseLed)
-            );
-            stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "Restoring...", [](){
-                    restoreBackup(RESTORE_FILE_PATH);
-                })
-            );
-            stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "Backup restored!", true, canUseLed)
-            );
-
-            brls::Application::pushView(stagedFrame);
-            stagedFrame->registerAction("", brls::Key::PLUS, []{return true;}, true);
-            stagedFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
-            stagedFrame->registerAction("", brls::Key::B, []{return true;}, true);
-            stagedFrame->updateActionHint(brls::Key::B, ""); // make the change visible
-        });
-        operationList->addView(restoreItem);
-    } else {
-        brls::ListItem* dialogItem = new brls::ListItem("Restore backup");
-        dialogItem->getClickEvent()->subscribe([](brls::View* view) {
-            brls::Dialog* dialog = new brls::Dialog("To restore, please place your backup file into\n" + string(RESTORE_FILE_PATH) + "\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!");
-            dialog->addButton("Close", [dialog](brls::View* view) {
-                dialog->close();
-            });
-            dialog->open();
-            dialog->registerAction("", brls::Key::PLUS, []{return true;}, true);
-            dialog->updateActionHint(brls::Key::PLUS, ""); // make the change visible
-        });
-        operationList->addView(dialogItem);
-    }
-
-    stringstream info_ss;
-    auto os = getRunningOS();
-    if (!os.empty()) {
-        info_ss << os << " detected" << endl;
-    }
-
-    if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
-        s32 acc_count = 0;
-        accountGetUserCount(&acc_count);
-        accountExit();
-        if (acc_count > 0) {
-            info_ss << "Found " << acc_count << " account" << (acc_count == 1 ? "" : "s") << endl;
-        }
-    }
-
-    info_ss << "Restore file " << (backupExists ? "" : "not ") << "found" << endl;
-    HardwareType hwType = getHardwareType();
-    info_ss << getHardwareName(hwType) << " detected";
-    if (hwType != Erista) {
-        info_ss << " (reboot to payload disabled)" << endl;
-    } else {
-        info_ss << endl << "Reboot to payload ";
-        if (getPayload().empty()) {
-            info_ss << "inactive (" << CUSTOM_PAYLOAD_FILE << " not found)";
-        } else {
-            info_ss << "active";
-        }
-    }
-
-    brls::ListItem* backupItem = new brls::ListItem("Create manual backup", info_ss.str());
+    brls::ListItem* backupItem = new brls::ListItem("Create manual backup");
     backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("Create manual backup");
@@ -421,6 +279,39 @@ int main(int argc, char* argv[])
     });
     operationList->addView(backupItem);
 
+    auto countrySelectItem = new CountrySelectView();
+    countrySelectItem->getValueSelectedEvent()->subscribe([](int result) {
+        cout << "selected2 " << result << endl;
+    });
+    operationList->addView(countrySelectItem);
+
+    auto userSelectItem = new brls::SelectListItem("translations/main_menu/select_users"_i18n, {"a", "b"});
+    userSelectItem->getValueSelectedEvent()->subscribe([](int result) {
+        cout << "selected3 " << result << endl;
+    });
+    stringstream info_ss;
+    if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
+        s32 acc_count = 0;
+        accountGetUserCount(&acc_count);
+        accountExit();
+        if (acc_count > 0) {
+            info_ss << "Found " << acc_count << " account" << (acc_count == 1 ? "" : "s") << endl;
+        }
+    }
+
+    HardwareType hwType = getHardwareType();
+    info_ss << "Reboot to payload ";
+    if (hwType != Erista) {
+        info_ss << " disabled" << endl;
+    } else {
+        if (getPayload().empty()) {
+            info_ss << "inactive (" << CUSTOM_PAYLOAD_FILE << " not found)";
+        } else {
+            info_ss << "active";
+        }
+    }
+    userSelectItem->setDescription(info_ss.str());
+    operationList->addView(userSelectItem);
 
     rootFrame->setContentView(operationList);
     brls::Application::pushView(rootFrame);

@@ -16,10 +16,8 @@ HidsysNotificationLedPattern getConfirmPattern();
 HidsysNotificationLedPattern getClearPattern();
 void sendLedPattern(HidsysNotificationLedPattern pattern);
 const std::string getPayload();
-const std::string getRunningOS();
 bool isErista();
 HardwareType getHardwareType();
-const std::string getHardwareName(HardwareType hwType);
 const std::string getLanguage();
 const std::string getTimezone();
 

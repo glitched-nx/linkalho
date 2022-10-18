@@ -82,44 +82,10 @@ void sendLedPattern(HidsysNotificationLedPattern pattern)
     }
 }
 
-bool isServiceRunning(const char* serviceName)
-{
-    Handle tmph = 0;
-    SmServiceName svcName = smEncodeName(serviceName);
-    Result rc = smRegisterService(&tmph, svcName, false, 1);
-    if (R_FAILED(rc)) return true;
-    smUnregisterService(svcName);
-    return false;
-}
-
-bool isAtmosphere()
-{
-    if(splInitialize() != 0) return false;
-    u64 tmpc = 0;
-    bool isAtmos = R_SUCCEEDED(splGetConfig((SplConfigItem)65000, &tmpc));
-    splExit();
-    return isAtmos;
-}
-
-inline bool isReiNX() { return isServiceRunning("rnx"); }
-inline bool isSXOS() { return isServiceRunning("tx"); }
-
 const std::string getPayload()
 {
     // if an override payload exists, boot from it
     return std::filesystem::exists(CUSTOM_PAYLOAD_FILE_PATH) ? CUSTOM_PAYLOAD_FILE_PATH : "";
-}
-
-const std::string getRunningOS()
-{
-    if (isSXOS()) {
-        return "SXOS";
-    } else if (isAtmosphere()) {
-        return "Atmosphere";
-    } else if (isReiNX()) {
-        return "ReiNX";
-    }
-    return "";
 }
 
 HardwareType getHardwareType() {
@@ -155,20 +121,6 @@ HardwareType getHardwareType() {
 
 bool isErista() {
     return getHardwareType() == Erista;
-}
-
-const std::string getHardwareName(HardwareType hwType) {
-    switch (hwType) {
-        case Erista:
-            return "Erista";
-        case Mariko:
-        case Aula:
-            return "Mariko";
-        default:
-            break;
-    }
-    // Aula hardware is still "unknown"
-    return "Unknown Hardware";
 }
 
 const std::string getLanguage() {

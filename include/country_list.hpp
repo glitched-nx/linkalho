@@ -1,7 +1,9 @@
+#pragma once
+
 #include <string>
 #include <map>
 
-std::map<std::string, std::string> COUNTRIES = {
+const static std::map<std::string, std::string> COUNTRIES = {
     {"Afghanistan", "AF"},
     {"Åland Islands", "AX"},
     {"Albania", "AL"},

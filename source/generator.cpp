@@ -11,12 +11,11 @@
 
 using namespace std;
 
-static auto BAAS_HEADER1    = 0xA5D192EA40AD1304;
+// static auto BAAS_HEADER1    = 0xA5D192EA40AD1304;
 static auto BAAS_HEADER2    = 0x0000006E00000001;
 static auto BAAS_HEADER3    = 0x0000000100000001;
 static auto PROFILE = R"({"id":"#NAS_ID#","language":"en-US","timezone":"Europe/Lisbon","country":"PT","analyticsOptedIn":false,"gender":"male","emailOptedIn":false,"birthday":"1980-01-01","isChild":false,"email":"•","screenName":"•","region":"","loginId":"•","nickname":"•","isNnLinked":false,"isTwitterLinked":false,"isFacebookLinked":false,"isGoogleLinked":false})";
 
-#ifdef USE_GENERATORS
 static mt19937_64 engine(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
 
 const string generateRandomAlphanumericString(size_t len)
@@ -37,42 +36,25 @@ unsigned long generateBytes()
     uniform_int_distribution<unsigned long> byteGenerator(0x0UL, 0xFFFFFFFFFFFFFFFF);
     return byteGenerator(engine);
 }
-#endif
 
 unsigned long generateNasId()
 {
-#ifdef USE_GENERATORS
     return generateBytes();
-#else
-    return 0xF12E677EB4021A81UL;
-#endif
 }
 
-unsigned long generateBaasUserId()
+unsigned long generateBaasId()
 {
-#ifdef USE_GENERATORS
     return generateBytes();
-#else
-    return 0xDEADC0DE000B00B5UL;
-#endif
 }
 
 const string generateBaasUserPassword()
 {
-#ifdef USE_GENERATORS
     return generateRandomAlphanumericString(40);
-#else
-    return "NRwtxRNkYIBE6eWoTG5gM4ykMRoYXOdRZhAWC4IF";
-#endif
 }
 
 const string generateProfileDat()
 {
-#ifdef USE_GENERATORS
     return generateRandomAlphanumericString(128);
-#else
-    return string(127, ' ') + '2';
-#endif
 }
 
 string stringReplace(const string& str, const string& from, const string& to) {
@@ -86,7 +68,7 @@ string stringReplace(const string& str, const string& from, const string& to) {
 
 Generator::Generator()
 {
-    _baasUserId = generateBaasUserId();
+    _baasUserId = generateBaasId();
     _nasId = generateNasId();
     stringstream ss;
     ss << std::hex << _nasId;
@@ -101,7 +83,8 @@ const string& Generator::nasIdStr() {
 void Generator::writeBaas(const string& fullpath)
 {
     ofstream ofs(fullpath, ios::binary);
-    ofs.write(reinterpret_cast<char*>(&BAAS_HEADER1), sizeof(BAAS_HEADER1));
+    auto account_id = generateBaasId();
+    ofs.write(reinterpret_cast<char*>(&account_id), sizeof(account_id));
     ofs.write(reinterpret_cast<char*>(&BAAS_HEADER2), sizeof(BAAS_HEADER2));
     ofs.write(reinterpret_cast<char*>(&_nasId), sizeof(_nasId));
     ofs.write(reinterpret_cast<char*>(&BAAS_HEADER3), sizeof(BAAS_HEADER3));

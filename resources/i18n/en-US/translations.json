@@ -1,0 +1,46 @@
+{
+    "main_menu": {
+        "select_profile_country": "Select country for linked accounts",
+        "select_users": "Select users to link/unlink",
+        "footer_text": "Found 10{} account{} | Reboot to payload inactive (reboot.bin not found)",
+        "info_text": "Found {} account{}\nReboot to payload {}",
+        "reboot_payload_disabled": "disabled",
+        "reboot_payload_inactive": "inactive ({} not found)",
+        "reboot_payload_active": "active"
+    },
+    "restore_view": {
+        "title": "Restore backup",
+        "not_found_dialog_hint": "Restore file not found!",
+        "not_found_dialog_text": "To restore, please place your backup file into\n{}\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!",
+        "not_found_dialog_btn": "close",
+        "restore_warning": "Restoring this backup WILL overwrite all files!\n(Your saves will be preserved)\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!",
+        "restoring": "Restoring...",
+        "restore_complete": "Backup restored!"
+    },
+    "main": {
+        "update_dongle": "Update Dongle Payload",
+        "update_cfw": "Update Custom Firmware (Atmosphère + Hekate)",
+        "footer_text": "v{} | {:.1f}GB available"
+    },
+    "update_dongle": {
+        "click_not_ready": "Please insert dongle in upgrade mode and try again.",
+        "dongle_not_found": "Dongle not found\n\nInsert the dongle in the USB port and double-click\nthe reset button to enter upgrade mode.",
+        "dongle_ready": "Dongle detected!",
+        "dongle_updated": "Dongle updated!"
+    },
+    "update_cfw": {
+        "cfw_prepare_to_reboot": "Your console will now reboot into a special payload.\nThis is fully unnatended!\n\nThe console should reboot back to CFW once finished.",
+        "reboot_btn": "Continue and reboot",
+        "cfw_prepare": "Actualizalho will now backup your CFW files and start unpacking the new ones.\n\nThis process is reversible with the usage of the backup files."
+    },
+    "confirm": {
+        "button_text_default": "Continue"
+    },
+    "errors": {
+        "no_files": "Update file not found!\nPlace '{}' file in the root of your SD card.",
+        "bad_zip_cfw": "Update file is missing some necessary files!\nPlease obtain a valid '{}' file.",
+        "bad_zip_dongle": "Dongle update file is missing!\nPlease obtain a valid '{}' file.",
+        "usb_error": "USB is not available!\nPlease restart the application and try again.",
+        "no_space": "Insufficient space left on the SD card."
+    }
+}
