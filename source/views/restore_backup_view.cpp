@@ -1,15 +1,14 @@
-#include "restore_backup_view.hpp"
-#include <string>
-#include <sys/stat.h>
-#include "confirm_page.hpp"
-#include "worker_page.hpp"
-#include "file_operations.hpp"
+#include "views/restore_backup_view.hpp"
+#include "views/confirm_view.hpp"
+#include "views/worker_view.hpp"
+#include "core/file_operations.hpp"
 #include "constants.hpp"
+#include <sys/stat.h>
 
 using namespace std;
 using namespace brls::i18n::literals;
 
-RestoreBackupView::RestoreBackupView(bool canUseLed) : ListItem("translations/restore_view/title"_i18n)
+RestoreBackupView::RestoreBackupView(bool canUseLed) : ListItem("translations/restore_backup_view/title"_i18n)
 {
     struct stat buffer;
     bool backupExists = (stat(RESTORE_FILE_PATH, &buffer) == 0);
@@ -18,18 +17,18 @@ RestoreBackupView::RestoreBackupView(bool canUseLed) : ListItem("translations/re
     {
         this->getClickEvent()->subscribe([canUseLed](brls::View* view) {
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-            stagedFrame->setTitle("translations/restore_view/title"_i18n);
+            stagedFrame->setTitle("translations/restore_backup_view/title"_i18n);
 
             stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "translations/restore_view/restore_warning"_i18n, false, canUseLed)
+                new ConfirmView(stagedFrame, "translations/restore_backup_view/warning"_i18n, false, canUseLed)
             );
             stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "translations/restore_view/restoring"_i18n, [](){
+                new WorkerView(stagedFrame, "translations/restore_backup_view/working"_i18n, [](){
                     restoreBackup(RESTORE_FILE_PATH);
                 })
             );
             stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, "translations/restore_view/restore_complete"_i18n, true, canUseLed)
+                new ConfirmView(stagedFrame, "translations/restore_backup_view/complete"_i18n, true, canUseLed)
             );
 
             brls::Application::pushView(stagedFrame);
@@ -40,15 +39,15 @@ RestoreBackupView::RestoreBackupView(bool canUseLed) : ListItem("translations/re
         });
     } else {
         this->getClickEvent()->subscribe([](brls::View* view) {
-            brls::Dialog* dialog = new brls::Dialog(fmt::format("translations/restore_view/not_found_dialog_text"_i18n, RESTORE_FILE_PATH));
+            brls::Dialog* dialog = new brls::Dialog(fmt::format("translations/restore_backup_view/not_found_dialog_text"_i18n, RESTORE_FILE_PATH));
 
-            dialog->addButton(fmt::format("translations/restore_view/not_found_dialog_btn"_i18n), [dialog](brls::View* view) {
+            dialog->addButton(fmt::format("translations/restore_backup_view/not_found_dialog_btn"_i18n), [dialog](brls::View* view) {
                 dialog->close();
             });
             dialog->open();
             dialog->registerAction("", brls::Key::PLUS, []{return true;}, true);
             dialog->updateActionHint(brls::Key::PLUS, ""); // make the change visible
         });
-        this->setValue(fmt::format("translations/restore_view/not_found_dialog_hint"_i18n), true, false);
+        this->setValue(fmt::format("translations/restore_backup_view/not_found_dialog_hint"_i18n), true, false);
     }
 }

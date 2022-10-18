@@ -1,5 +1,4 @@
-#ifndef __LINKALHO_CONSTANTS_HPP__
-#define __LINKALHO_CONSTANTS_HPP__
+#pragma once
 
 // #define DEBUG
 #define LOCAL_PATH "sdmc:/switch/" APP_TITLE_LOWER "/"
@@ -16,5 +15,3 @@
 
 #define CUSTOM_PAYLOAD_FILE "reboot.bin"
 #define CUSTOM_PAYLOAD_FILE_PATH LOCAL_PATH CUSTOM_PAYLOAD_FILE
-
-#endif // __LINKALHO_CONSTANTS_HPP__

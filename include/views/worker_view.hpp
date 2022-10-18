@@ -1,5 +1,4 @@
-#ifndef __LINKALHO_WORKER_PAGE_HPP__
-#define __LINKALHO_WORKER_PAGE_HPP__
+#pragma once
 
 #include <borealis.hpp>
 #include <thread>
@@ -7,7 +6,7 @@
 
 typedef std::function<void()> worker_func_t;
 
-class WorkerPage : public brls::View
+class WorkerView : public brls::View
 {
   private:
     brls::Label* label;
@@ -20,8 +19,8 @@ class WorkerPage : public brls::View
     worker_func_t workerFunc;
 
   public:
-    WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc);
-    ~WorkerPage();
+    WorkerView(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc);
+    ~WorkerView();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx) override;
     void layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash) override;
@@ -31,5 +30,3 @@ class WorkerPage : public brls::View
     void willAppear(bool resetState = false) override;
     void willDisappear(bool resetState = false) override;
 };
-
-#endif // __LINKALHO_WORKER_PAGE_HPP__

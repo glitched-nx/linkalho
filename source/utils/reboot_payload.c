@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <switch.h>
-#include "reboot_payload.h"
+#include "utils/reboot_payload.h"
 #include "constants.hpp"
 
 #define IRAM_PAYLOAD_MAX_SIZE   0x2F000

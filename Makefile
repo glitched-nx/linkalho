@@ -38,7 +38,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
 BUILD		:=	build
-SOURCES		:=	source lib/zipper/source
+SOURCES		:=	source source/core source/styles source/utils source/views lib/zipper/source
 DATA		:=	data
 INCLUDES	:=	include lib/zipper/include
 APP_TITLE   :=  Linkalho

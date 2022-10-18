@@ -1,5 +1,5 @@
-#include "visual_overrides.hpp"
-#include<stdio.h>
+#include "styles/visual_overrides.hpp"
+#include <stdio.h>
 
 brls::Style* VisualOverrides::LinkalhoStyle()
 {
@@ -7,6 +7,7 @@ brls::Style* VisualOverrides::LinkalhoStyle()
     style->AppletFrame.titleSize = 30;
     style->AppletFrame.titleStart = 35;
     style->List.marginLeftRight = 40;
+    style->List.marginTopBottom = 38;
     style->Dialog.height = 380;
     style->Dialog.paddingLeftRight = 56;
     return style;

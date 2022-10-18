@@ -1,5 +1,5 @@
-#include "country_select_view.hpp"
-#include "country_list.hpp"
+#include "views/country_select_view.hpp"
+#include "utils/country_list.hpp"
 #include <string>
 
 using namespace std;
@@ -7,7 +7,6 @@ using namespace brls::i18n::literals;
 
 CountrySelectView::CountrySelectView() : SelectListItem("translations/main_menu/select_profile_country"_i18n, {"Portugal"}, 0)
 {
-    bool countryFound = false;
     vector<string> countryList = {};
 
     countryList.reserve(COUNTRIES.size());

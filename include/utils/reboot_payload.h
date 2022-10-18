@@ -1,5 +1,4 @@
-#ifndef __REBOOT_PAYLOAD_H__
-#define __REBOOT_PAYLOAD_H__
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,6 +8,4 @@ bool rebootToPayload(const char* payloadFile);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

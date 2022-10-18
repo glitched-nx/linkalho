@@ -8,32 +8,28 @@
         "reboot_payload_inactive": "inactive ({} not found)",
         "reboot_payload_active": "active"
     },
-    "restore_view": {
+    "restore_backup_view": {
         "title": "Restore backup",
         "not_found_dialog_hint": "Restore file not found!",
         "not_found_dialog_text": "To restore, please place your backup file into\n{}\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!",
         "not_found_dialog_btn": "close",
-        "restore_warning": "Restoring this backup WILL overwrite all files!\n(Your saves will be preserved)\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!",
-        "restoring": "Restoring...",
-        "restore_complete": "Backup restored!"
+        "warning": "Restoring this backup WILL overwrite all files!\n(Your saves will be preserved)\n\nMake sure the backup is valid as it will overwrite the console's partition files and might cause your Switch to stop booting!",
+        "working": "Restoring...",
+        "complete": "Backup restored!"
     },
-    "main": {
-        "update_dongle": "Update Dongle Payload",
-        "update_cfw": "Update Custom Firmware (Atmosphère + Hekate)",
-        "footer_text": "v{} | {:.1f}GB available"
+    "create_backup_view": {
+        "title": "Create manual backup",
+        "warning": "All linking and unlinking operations will produce a backup before making changes!\n\nYou should only use this option if you want to manually create a backup.",
+        "working": "Backing up...",
+        "complete": "Backup created!"
     },
-    "update_dongle": {
-        "click_not_ready": "Please insert dongle in upgrade mode and try again.",
-        "dongle_not_found": "Dongle not found\n\nInsert the dongle in the USB port and double-click\nthe reset button to enter upgrade mode.",
-        "dongle_ready": "Dongle detected!",
-        "dongle_updated": "Dongle updated!"
+    "confirm_view": {
+        "continue": "Continue",
+        "back": "Back",
+        "reboot": "Reboot",
+        "reboot_to_payload": "Reboot to payload"
     },
-    "update_cfw": {
-        "cfw_prepare_to_reboot": "Your console will now reboot into a special payload.\nThis is fully unnatended!\n\nThe console should reboot back to CFW once finished.",
-        "reboot_btn": "Continue and reboot",
-        "cfw_prepare": "Actualizalho will now backup your CFW files and start unpacking the new ones.\n\nThis process is reversible with the usage of the backup files."
-    },
-    "confirm": {
+    "buttons": {
         "button_text_default": "Continue"
     },
     "errors": {

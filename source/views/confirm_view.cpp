@@ -1,18 +1,20 @@
 #include <switch.h>
-#include "confirm_page.hpp"
-#include <borealis.hpp>
-#include "utils.hpp"
+#include "views/confirm_view.hpp"
+#include "utils/reboot_payload.h"
+#include "utils/utils.hpp"
 #include <algorithm>
-#include "reboot_payload.h"
 
-ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed): reboot(reboot), canUseLed(canUseLed)
+using namespace std;
+using namespace brls::i18n::literals;
+
+ConfirmView::ConfirmView(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed): reboot(reboot), canUseLed(canUseLed)
 {
     auto payloadFile = getPayload();
 
-    std::string buttonLabel = "Continue";
+    string buttonLabel = "translations/confirm_view/continue"_i18n;
     if (reboot) {
         bool canRebootToPayload = isErista() && !payloadFile.empty();
-        buttonLabel = canRebootToPayload ? "Reboot to payload" : "Reboot";
+        buttonLabel = canRebootToPayload ? "translations/confirm_view/reboot_to_payload"_i18n : "translations/confirm_view/reboot"_i18n;
     }
 
     this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS : brls::ButtonStyle::PRIMARY))->setLabel(buttonLabel);
@@ -34,19 +36,19 @@ ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text
     this->label->setParent(this);
 
     if (!reboot) {
-        this->registerAction("Back", brls::Key::B, [this] {
+        this->registerAction("translations/confirm_view/back"_i18n, brls::Key::B, [this] {
             brls::Application::popView();
             return true;
         });
     }
 }
 
-void ConfirmPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx)
+void ConfirmView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx)
 {
     if (!this->reboot) {
         auto end = std::chrono::high_resolution_clock::now();
         auto missing = std::max(3l - std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 0l);
-        auto text =  std::string(this->reboot ? "Reboot": "Continue");
+        auto text =  std::string(this->reboot ? "translations/confirm_view/reboot"_i18n: "translations/confirm_view/continue"_i18n);
         if (missing > 0) {
             this->button->setLabel(text + " (" + std::to_string(missing) + ")");
             this->button->setState(brls::ButtonState::DISABLED);
@@ -60,12 +62,12 @@ void ConfirmPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     this->button->frame(ctx);
 }
 
-brls::View* ConfirmPage::getDefaultFocus()
+brls::View* ConfirmView::getDefaultFocus()
 {
     return this->button;
 }
 
-void ConfirmPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
+void ConfirmView::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
 {
     this->label->setWidth(this->width);
     this->label->invalidate(true);
@@ -95,7 +97,7 @@ void ConfirmPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* st
     }
 }
 
-void ConfirmPage::willDisappear(bool resetState)
+void ConfirmView::willDisappear(bool resetState)
 {
     if (!this->reboot) {
         HidsysNotificationLedPattern pattern = getClearPattern();
@@ -103,7 +105,7 @@ void ConfirmPage::willDisappear(bool resetState)
     }
 }
 
-ConfirmPage::~ConfirmPage()
+ConfirmView::~ConfirmView()
 {
     delete this->label;
     delete this->button;

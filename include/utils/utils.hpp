@@ -1,5 +1,4 @@
-#ifndef __LINKALHO_UTILS_HPP__
-#define __LINKALHO_UTILS_HPP__
+#pragma once
 
 #include <switch.h>
 
@@ -20,5 +19,3 @@ bool isErista();
 HardwareType getHardwareType();
 const std::string getLanguage();
 const std::string getTimezone();
-
-#endif // __LINKALHO_UTILS_HPP__

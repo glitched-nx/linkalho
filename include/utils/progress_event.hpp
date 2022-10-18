@@ -1,6 +1,4 @@
-#ifndef __LINKALHO_PROGRESS_EVENT_HPP__
-#define __LINKALHO_PROGRESS_EVENT_HPP__
-
+#pragma once
 class ProgressEvent{
 private:
     ProgressEvent() {}
@@ -37,5 +35,3 @@ public:
     inline bool finished() { return _current == _max; }
     inline int getMax() { return _max; }
 };
-
-#endif // __LINKALHO_PROGRESS_EVENT_HPP__

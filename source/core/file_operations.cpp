@@ -10,8 +10,8 @@
 #include "zipper.h"
 #include "unzipper.h"
 #include "constants.hpp"
-#include "generator.hpp"
-#include "progress_event.hpp"
+#include "core/generator.hpp"
+#include "utils/progress_event.hpp"
 
 using namespace std;
 using namespace zipper;

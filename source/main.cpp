@@ -1,7 +1,9 @@
 #include <switch.h>
 #include <borealis.hpp>
-#include "country_select_view.hpp"
-#include "restore_backup_view.hpp"
+#include "styles/visual_overrides.hpp"
+#include "views/country_select_view.hpp"
+#include "views/restore_backup_view.hpp"
+#include "views/create_backup_view.hpp"
 
 
 
@@ -9,13 +11,12 @@
 #include <stdlib.h>
 #include <string>
 #include <sys/stat.h>
-#include "confirm_page.hpp"
-#include "worker_page.hpp"
-#include "file_operations.hpp"
+#include "views/confirm_view.hpp"
+#include "views/worker_view.hpp"
+#include "core/file_operations.hpp"
 #include "constants.hpp"
-#include "visual_overrides.hpp"
-#include "progress_event.hpp"
-#include "utils.hpp"
+#include "utils/progress_event.hpp"
+#include "utils/utils.hpp"
 #include <iostream>
 // #include "country_list.hpp"
 #include <bit>
@@ -207,15 +208,15 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Link all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be overwritten!", false, canUseLed)
+            new ConfirmView(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be overwritten!", false, canUseLed)
         );
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "Linking...", [](){
+            new WorkerView(stagedFrame, "Linking...", [](){
                 linkAccount();
             })
         );
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Accounts linked!", true, canUseLed)
+            new ConfirmView(stagedFrame, "Accounts linked!", true, canUseLed)
         );
 
         brls::Application::pushView(stagedFrame);
@@ -232,15 +233,15 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("Unlink all accounts");
 
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be erased!", false, canUseLed)
+            new ConfirmView(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be erased!", false, canUseLed)
         );
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "Unlinking...", [](){
+            new WorkerView(stagedFrame, "Unlinking...", [](){
                 unlinkAccount();
             })
         );
         stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Accounts unlinked!", true, canUseLed)
+            new ConfirmView(stagedFrame, "Accounts unlinked!", true, canUseLed)
         );
 
         brls::Application::pushView(stagedFrame);
@@ -254,36 +255,14 @@ int main(int argc, char* argv[])
     auto restoreBackupView = new RestoreBackupView(canUseLed);
     operationList->addView(restoreBackupView);
 
-    brls::ListItem* backupItem = new brls::ListItem("Create manual backup");
-    backupItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
-        brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("Create manual backup");
+    auto createBackupView = new CreateBackupView(canUseLed);
+    operationList->addView(createBackupView);
 
-        stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "All linking and unlinking operations will produce a backup before making changes!\n\nYou should only use this option if you want to manually create a backup.", false, canUseLed)
-        );
-        stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "Backing up...", [](){
-                manualBackup();
-            })
-        );
-        stagedFrame->addStage(
-            new ConfirmPage(stagedFrame, "Backup created!", true, canUseLed)
-        );
-
-        brls::Application::pushView(stagedFrame);
-        stagedFrame->registerAction("", brls::Key::PLUS, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
-        stagedFrame->registerAction("", brls::Key::B, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::B, ""); // make the change visible
-    });
-    operationList->addView(backupItem);
-
-    auto countrySelectItem = new CountrySelectView();
-    countrySelectItem->getValueSelectedEvent()->subscribe([](int result) {
+    auto countrySelectView = new CountrySelectView();
+    countrySelectView->getValueSelectedEvent()->subscribe([](int result) {
         cout << "selected2 " << result << endl;
     });
-    operationList->addView(countrySelectItem);
+    operationList->addView(countrySelectView);
 
     auto userSelectItem = new brls::SelectListItem("translations/main_menu/select_users"_i18n, {"a", "b"});
     userSelectItem->getValueSelectedEvent()->subscribe([](int result) {
@@ -310,6 +289,7 @@ int main(int argc, char* argv[])
             info_ss << "active";
         }
     }
+    userSelectItem->setReduceDescriptionSpacing(true);
     userSelectItem->setDescription(info_ss.str());
     operationList->addView(userSelectItem);
 

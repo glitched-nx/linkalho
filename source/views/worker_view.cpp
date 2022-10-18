@@ -1,10 +1,9 @@
-#include "worker_page.hpp"
-#include <borealis.hpp>
+#include "views/worker_view.hpp"
+#include "utils/progress_event.hpp"
 #include <math.h>
-#include "progress_event.hpp"
 #include <functional>
 
-WorkerPage::WorkerPage(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc): frame(frame), workerFunc(workerFunc)
+WorkerView::WorkerView(brls::StagedAppletFrame* frame, const std::string& warning, worker_func_t workerFunc): frame(frame), workerFunc(workerFunc)
 {
 
     this->progressDisp = new brls::ProgressDisplay();
@@ -18,12 +17,12 @@ WorkerPage::WorkerPage(brls::StagedAppletFrame* frame, const std::string& warnin
     this->button->setParent(this);
 }
 
-void WorkerPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx)
+void WorkerView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx)
 {
     if (!this->workStarted)
     {
         this->workStarted = true;
-        workerThread = new std::thread(&WorkerPage::doWork, this);
+        workerThread = new std::thread(&WorkerView::doWork, this);
     }
     else if (ProgressEvent::instance().finished())
     {
@@ -38,19 +37,19 @@ void WorkerPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     }
 }
 
-void WorkerPage::doWork()
+void WorkerView::doWork()
 {
     if (this->workerFunc)
         this->workerFunc();
     //frame->nextStage();
 }
 
-brls::View* WorkerPage::getDefaultFocus()
+brls::View* WorkerView::getDefaultFocus()
 {
     return this->button;
 }
 
-void WorkerPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
+void WorkerView::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
 {
     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
     //this->label->invalidate(true);
@@ -74,17 +73,17 @@ void WorkerPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* sta
     //     0);
 }
 
-void WorkerPage::willAppear(bool resetState)
+void WorkerView::willAppear(bool resetState)
 {
     this->progressDisp->willAppear(resetState);
 }
 
-void WorkerPage::willDisappear(bool resetState)
+void WorkerView::willDisappear(bool resetState)
 {
     this->progressDisp->willDisappear(resetState);
 }
 
-WorkerPage::~WorkerPage()
+WorkerView::~WorkerView()
 {
     if (this->workStarted && workerThread->joinable())
     {

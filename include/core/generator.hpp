@@ -1,5 +1,4 @@
-#ifndef __LINKALHO_GENERATOR_HPP__
-#define __LINKALHO_GENERATOR_HPP__
+#pragma once
 
 #include <string>
 
@@ -28,5 +27,3 @@ public:
     void writeProfileJson(const std::string& fullpath);
 
 };
-
-#endif  // __LINKALHO_GENERATOR_HPP__

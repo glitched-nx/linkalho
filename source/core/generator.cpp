@@ -5,7 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include "constants.hpp"
-#include "generator.hpp"
+#include "core/generator.hpp"
 
 #include <iostream>
 
