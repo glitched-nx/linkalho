@@ -20,5 +20,7 @@ const std::string getRunningOS();
 bool isErista();
 HardwareType getHardwareType();
 const std::string getHardwareName(HardwareType hwType);
+const std::string getLanguage();
+const std::string getTimezone();
 
 #endif // __LINKALHO_UTILS_HPP__

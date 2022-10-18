@@ -162,10 +162,27 @@ const std::string getHardwareName(HardwareType hwType) {
         case Erista:
             return "Erista";
         case Mariko:
+        case Aula:
             return "Mariko";
         default:
             break;
     }
     // Aula hardware is still "unknown"
     return "Unknown Hardware";
+}
+
+const std::string getLanguage() {
+    u64 languageCode=0;
+    if (R_SUCCEEDED(setGetSystemLanguage(&languageCode)) && languageCode) {
+        return std::string(reinterpret_cast<char*>(&languageCode));
+    }
+    return "en-US";
+}
+
+const std::string getTimezone() {
+    TimeLocationName tl;
+    if (R_SUCCEEDED(setsysGetDeviceTimeZoneLocationName(&tl))) {
+        return tl.name;
+    }
+    return "Europe/Lisbon";;
 }

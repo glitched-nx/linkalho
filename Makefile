@@ -62,7 +62,7 @@ CFLAGS	+=	$(INCLUDE) -D__SWITCH__ \
 			-DAPP_VERSION="\"$(APP_VERSION)\"" \
 			-DAPP_TITLE="\"$(APP_TITLE)\"" -DAPP_TITLE_LOWER="\"$(TARGET)\""
 
-CXXFLAGS	:= $(CFLAGS) -std=c++1z -O2
+CXXFLAGS	:= $(CFLAGS) -std=c++20 -O2 -Wno-reorder
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)

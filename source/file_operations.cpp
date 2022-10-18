@@ -110,12 +110,6 @@ void unmountSaveData(FsFileSystem& acc, bool commit=false)
     } else {
         cout << "fsdevUnmountDevice failed!" << endl;
     }
-    // if (R_SUCCEEDED(fsFsClose(&acc))) {
-    //     cout << "fsFsClose successful!" << endl;
-    // } else {
-    //     cout << "fsFsClose failed!" << endl;
-    // }
-    // fsdevUnmountDevice("account");
     fsFsClose(&acc);
 #endif
 }
@@ -208,16 +202,16 @@ void linkAccount()
         ProgressEvent::instance().setStep(4);
 
         for (auto& entry: getDirContents(ACCOUNT_PATH, ".jpg")) {
-
+            Generator gen;
             cout << "Generating data for " << entry.stem().string() << std::endl;
             auto linkerFile = baasDir+"/"+entry.stem().string()+".dat";
-            Generator::instance().writeBaas(linkerFile);
+            gen.writeBaas(linkerFile);
 
-            auto profileDatFilename = nasDir + "/" + Generator::instance().nasIdStr() + ".dat";
-            Generator::instance().writeProfileDat(profileDatFilename);
+            auto profileDatFilename = nasDir + "/" + gen.nasIdStr() + ".dat";
+            gen.writeProfileDat(profileDatFilename);
 
-            auto profileJsonFilename = nasDir + "/" + Generator::instance().nasIdStr() + "_user.json";
-            Generator::instance().writeProfileJson(profileJsonFilename);
+            auto profileJsonFilename = nasDir + "/" + gen.nasIdStr() + "_user.json";
+            gen.writeProfileJson(profileJsonFilename);
         }
 
         cout << "Listing " << baasDir << endl;

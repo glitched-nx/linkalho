@@ -12,7 +12,7 @@ ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text
     std::string buttonLabel = "Continue";
     if (reboot) {
         bool canRebootToPayload = isErista() && !payloadFile.empty();
-        buttonLabel = (isErista() && !payloadFile.empty()) ? "Reboot to payload" : "Reboot";
+        buttonLabel = canRebootToPayload ? "Reboot to payload" : "Reboot";
     }
 
     this->button = (new brls::Button(reboot ? brls::ButtonStyle::BORDERLESS : brls::ButtonStyle::PRIMARY))->setLabel(buttonLabel);

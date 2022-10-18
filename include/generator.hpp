@@ -5,22 +5,22 @@
 
 class Generator{
 private:
-    Generator(); // Disallow instantiation outside of the class.
 
     unsigned long _nasId;
     std::string _nasIdStr;
     unsigned long _baasUserId;
 
 public:
-    Generator(const Generator&) = delete;
-    Generator& operator=(const Generator &) = delete;
-    Generator(Generator &&) = delete;
-    Generator & operator=(Generator &&) = delete;
+    Generator(); // Disallow instantiation outside of the class.
+    // Generator(const Generator&) = delete;
+    // Generator& operator=(const Generator &) = delete;
+    // Generator(Generator &&) = delete;
+    // Generator & operator=(Generator &&) = delete;
 
-    static auto& instance(){
-        static Generator gen;
-        return gen;
-    }
+    // static auto& instance(){
+    //     static Generator gen;
+    //     return gen;
+    // }
 
     const std::string& nasIdStr();
     void writeBaas(const std::string& fullpath);
