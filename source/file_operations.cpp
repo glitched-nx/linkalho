@@ -99,9 +99,23 @@ void unmountSaveData(FsFileSystem& acc, bool commit=false)
 {
 #ifndef DEBUG
     if (commit) {
-        fsdevCommitDevice("account");
+        if (R_SUCCEEDED(fsdevCommitDevice("account"))) {
+            cout << "fsdevCommitDevice successful!" << endl;
+        } else {
+            cout << "fsdevCommitDevice failed!" << endl;
+        }
     }
-    fsdevUnmountDevice("account");
+    if (R_SUCCEEDED(fsdevUnmountDevice("account"))) {
+        cout << "fsdevUnmountDevice successful!" << endl;
+    } else {
+        cout << "fsdevUnmountDevice failed!" << endl;
+    }
+    // if (R_SUCCEEDED(fsFsClose(&acc))) {
+    //     cout << "fsFsClose successful!" << endl;
+    // } else {
+    //     cout << "fsFsClose failed!" << endl;
+    // }
+    // fsdevUnmountDevice("account");
     fsFsClose(&acc);
 #endif
 }
@@ -182,19 +196,20 @@ void linkAccount()
         cout << endl << endl  << "Linking accounts... ";
 
         auto baasDir = string(ACCOUNT_PATH) + "/baas";
-        // cout << "create=[" << baasDir << "]" << endl;
-        filesystem::create_directories(baasDir);
+        cout << "create=[" << baasDir << "]" << endl;
         filesystem::remove_all(baasDir);
+        filesystem::create_directories(baasDir);
         ProgressEvent::instance().setStep(3);
 
         auto nasDir = string(ACCOUNT_PATH) + "/nas";
-        // cout << "create=[" << nasDir << "]" << endl;
-        filesystem::create_directories(nasDir);
+        cout << "create=[" << nasDir << "]" << endl;
         filesystem::remove_all(nasDir);
+        filesystem::create_directories(nasDir);
         ProgressEvent::instance().setStep(4);
 
         for (auto& entry: getDirContents(ACCOUNT_PATH, ".jpg")) {
 
+            cout << "Generating data for " << entry.stem().string() << std::endl;
             auto linkerFile = baasDir+"/"+entry.stem().string()+".dat";
             Generator::instance().writeBaas(linkerFile);
 
@@ -204,6 +219,19 @@ void linkAccount()
             auto profileJsonFilename = nasDir + "/" + Generator::instance().nasIdStr() + "_user.json";
             Generator::instance().writeProfileJson(profileJsonFilename);
         }
+
+        cout << "Listing " << baasDir << endl;
+        for (auto& entry: getDirContents(baasDir, ".dat")) {
+            cout << "[" <<  entry.string() << "]" << endl;
+        }
+        cout << "Listing " << nasDir << endl;
+        for (auto& entry: getDirContents(nasDir, ".dat")) {
+            cout << "[" <<  entry.string() << "]" << endl;
+        }
+        for (auto& entry: getDirContents(nasDir, ".json")) {
+            cout << "[" <<  entry.string() << "]" << endl;
+        }
+
         ProgressEvent::instance().setStep(5);
         cout << "Success!" << endl;
 
