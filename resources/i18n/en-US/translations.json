@@ -1,8 +1,7 @@
 {
     "main_menu": {
         "select_profile_country": "Select country for linked accounts",
-        "select_users": "Select users to link/unlink",
-        "footer_text": "Found 10{} account{} | Reboot to payload inactive (reboot.bin not found)",
+        "select_users": "Select accounts to link/unlink",
         "info_text": "Found {} account{}\nReboot to payload {}",
         "reboot_payload_disabled": "disabled",
         "reboot_payload_inactive": "inactive ({} not found)",
@@ -22,6 +21,18 @@
         "warning": "All linking and unlinking operations will produce a backup before making changes!\n\nYou should only use this option if you want to manually create a backup.",
         "working": "Backing up...",
         "complete": "Backup created!"
+    },
+    "link_accounts_view": {
+        "title": "Link selected accounts",
+        "warning": "Linking accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf any of the selected accounts had a NNID link, it will be overwritten!",
+        "working": "Linking...",
+        "complete": "Accounts linked!"
+    },
+    "unlink_accounts_view": {
+        "title": "Unlink selected accounts",
+        "warning": "Unlinking will change users accounts.\n(Your saves will be preserved)\n\nIf any of the selected accounts had a NNID link, it will be erased!",
+        "working": "Uninking...",
+        "complete": "Accounts unlinked!"
     },
     "confirm_view": {
         "continue": "Continue",

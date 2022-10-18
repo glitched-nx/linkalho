@@ -4,6 +4,8 @@
 #include "views/country_select_view.hpp"
 #include "views/restore_backup_view.hpp"
 #include "views/create_backup_view.hpp"
+#include "views/link_accounts_view.hpp"
+#include "views/unlink_accounts_view.hpp"
 
 
 
@@ -197,60 +199,15 @@ int main(int argc, char* argv[])
         s32 acc_count = 0;
         accountGetUserCount(&acc_count);
         accountExit();
-        // rootFrame->setFooterText(fmt::format("translations/main_menu/footer_text"_i18n, acc_count, (acc_count == 1 ? "" : "s")));
     }
 
-    brls::List* operationList = new brls::List();
+    auto operationList = new brls::List();
 
-    brls::ListItem* linkItem = new brls::ListItem("Link all accounts");
-    linkItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
-        brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("Link all accounts");
+    auto linkAccountsView = new LinkAccountsView(canUseLed);
+    operationList->addView(linkAccountsView);
 
-        stagedFrame->addStage(
-            new ConfirmView(stagedFrame, "Linking all accounts will overwrite all previous links.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be overwritten!", false, canUseLed)
-        );
-        stagedFrame->addStage(
-            new WorkerView(stagedFrame, "Linking...", [](){
-                linkAccount();
-            })
-        );
-        stagedFrame->addStage(
-            new ConfirmView(stagedFrame, "Accounts linked!", true, canUseLed)
-        );
-
-        brls::Application::pushView(stagedFrame);
-        stagedFrame->registerAction("", brls::Key::PLUS, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
-        stagedFrame->registerAction("", brls::Key::B, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::B, ""); // make the change visible
-    });
-    operationList->addView(linkItem);
-
-    brls::ListItem* unlinkItem = new brls::ListItem("Unlink all accounts");
-    unlinkItem->getClickEvent()->subscribe([canUseLed](brls::View* view) {
-        brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("Unlink all accounts");
-
-        stagedFrame->addStage(
-            new ConfirmView(stagedFrame, "Unlinking accounts will reset all users.\n(Your saves will be preserved)\n\nIf you had any previously linked NNID account, it will be erased!", false, canUseLed)
-        );
-        stagedFrame->addStage(
-            new WorkerView(stagedFrame, "Unlinking...", [](){
-                unlinkAccount();
-            })
-        );
-        stagedFrame->addStage(
-            new ConfirmView(stagedFrame, "Accounts unlinked!", true, canUseLed)
-        );
-
-        brls::Application::pushView(stagedFrame);
-        stagedFrame->registerAction("", brls::Key::PLUS, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
-        stagedFrame->registerAction("", brls::Key::B, []{return true;}, true);
-        stagedFrame->updateActionHint(brls::Key::B, ""); // make the change visible
-    });
-    operationList->addView(unlinkItem);
+    auto unlinkAccountsView = new UnlinkAccountsView(canUseLed);
+    operationList->addView(unlinkAccountsView);
 
     auto restoreBackupView = new RestoreBackupView(canUseLed);
     operationList->addView(restoreBackupView);
