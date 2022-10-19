@@ -54,7 +54,7 @@ static void inject_payload(void) {
 
 bool rebootToPayload(const char* payloadFile)
 {
-#ifndef DEBUG
+#ifndef LINKALHO_DEBUG
     Result rc = splInitialize();
     if (R_FAILED(rc)) {
         return false;

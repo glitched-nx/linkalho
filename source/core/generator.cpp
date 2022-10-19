@@ -5,6 +5,8 @@
 #include <sstream>
 #include <fstream>
 #include "constants.hpp"
+#include "utils/utils.hpp"
+#include "core/shared_settings.hpp"
 #include "core/generator.hpp"
 
 #include <iostream>
@@ -14,7 +16,7 @@ using namespace std;
 // static auto BAAS_HEADER1    = 0xA5D192EA40AD1304;
 static auto BAAS_HEADER2    = 0x0000006E00000001;
 static auto BAAS_HEADER3    = 0x0000000100000001;
-static auto PROFILE = R"({"id":"#NAS_ID#","language":"en-US","timezone":"Europe/Lisbon","country":"PT","analyticsOptedIn":false,"gender":"male","emailOptedIn":false,"birthday":"1980-01-01","isChild":false,"email":"•","screenName":"•","region":"","loginId":"•","nickname":"•","isNnLinked":false,"isTwitterLinked":false,"isFacebookLinked":false,"isGoogleLinked":false})";
+static auto PROFILE = R"({"id":"#NAS_ID#","language":"#LOCALE#","timezone":"#TIMEZONE#","country":"#COUNTRY_CODE#","analyticsOptedIn":false,"gender":"male","emailOptedIn":false,"birthday":"1980-01-01","isChild":false,"email":"•","screenName":"•","region":"","loginId":"•","nickname":"•","isNnLinked":false,"isTwitterLinked":false,"isFacebookLinked":false,"isGoogleLinked":false})";
 
 static mt19937_64 engine(chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
 
@@ -101,5 +103,26 @@ void Generator::writeProfileDat(const string& fullpath)
 void Generator::writeProfileJson(const string& fullpath)
 {
     ofstream ofs(fullpath, ios::binary);
-    ofs << stringReplace(PROFILE, "#NAS_ID#", _nasIdStr);
+    string locale = getLocale();
+    string timezone = getTimezone();
+    string country_code = SharedSettings::instance().getCountryCode();
+    string generated_profile = stringReplace(
+        stringReplace(
+            stringReplace(
+                stringReplace(
+                    PROFILE,
+                    "#NAS_ID#",
+                    _nasIdStr
+                ),
+                "#LOCALE#",
+                locale
+            ),
+            "#TIMEZONE#",
+            timezone
+        ),
+        "#COUNTRY_CODE#",
+        country_code
+    );
+    cout << "generated profile: " << generated_profile << endl;
+    ofs << generated_profile;
 }

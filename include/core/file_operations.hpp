@@ -4,7 +4,7 @@
 #include <vector>
 
 bool initDirs();
-void linkAccount();
-void unlinkAccount();
+void linkAccounts();
+void unlinkAccounts();
 void restoreBackup(const std::string& backupFullpath);
 void manualBackup();

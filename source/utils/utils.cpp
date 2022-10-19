@@ -8,7 +8,7 @@
 
 void attemptForceReboot()
 {
-#ifndef DEBUG
+#ifndef LINKALHO_DEBUG
     Result rc = spsmInitialize();
     if (R_FAILED(rc))
         printf("spsmInit: %08X\n", rc);
@@ -123,12 +123,12 @@ bool isErista() {
     return getHardwareType() == Erista;
 }
 
-const std::string getLanguage() {
+const std::string getLocale() {
     u64 languageCode=0;
     if (R_SUCCEEDED(setGetSystemLanguage(&languageCode)) && languageCode) {
         return std::string(reinterpret_cast<char*>(&languageCode));
     }
-    return DEFAULT_LANGUAGE;
+    return std::string(DEFAULT_LOCALE);
 }
 
 const std::string getTimezone() {

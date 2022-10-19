@@ -12,6 +12,7 @@ class ConfirmView : public brls::View
     bool reboot = false;
     bool isLastStage = false;
     bool canUseLed = false;
+    brls::StagedAppletFrame* frame = nullptr;
 
   public:
     ConfirmView(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed);

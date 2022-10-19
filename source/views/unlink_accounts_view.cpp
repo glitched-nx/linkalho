@@ -12,22 +12,26 @@ using namespace brls::i18n::literals;
 UnlinkAccountsView::UnlinkAccountsView(bool canUseLed) : ListItem("translations/unlink_accounts_view/title"_i18n)
 {
     this->getClickEvent()->subscribe([this, canUseLed](brls::View* view) {
+
+        if (SharedSettings::instance().getSelectedProfiles().size() == 0) {
+            brls::Application::notify("translations/errors/no_accounts_selected"_i18n);
+            return;
+        }
+
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("translations/unlink_accounts_view/title"_i18n);
-
+#ifndef LINKALHO_DEBUG
         stagedFrame->addStage(
             new ConfirmView(stagedFrame, "translations/unlink_accounts_view/warning"_i18n, false, canUseLed)
         );
-        // stagedFrame->addStage(
-        //     new WorkerView(stagedFrame, "translations/unlink_accounts_view/working"_i18n, [this](){
-        //         cout << "getSelectedProfiles size: " << SharedSettings::instance().getSelectedProfiles().size() << endl;
-        //         brls::Application::popView();
-        //         brls::Application::notify("There be jorge");
-        //         // unlinkAccount();
-        //     })
-        // );
+#endif
         stagedFrame->addStage(
-            new ConfirmView(stagedFrame, "translations/unlink_accounts_view/complete"_i18n, false, canUseLed)
+            new WorkerView(stagedFrame, "translations/unlink_accounts_view/working"_i18n, [this](){
+                unlinkAccounts();
+            })
+        );
+        stagedFrame->addStage(
+            new ConfirmView(stagedFrame, "translations/unlink_accounts_view/complete"_i18n, true, canUseLed)
         );
 
         brls::Application::pushView(stagedFrame);

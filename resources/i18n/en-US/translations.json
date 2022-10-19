@@ -49,14 +49,7 @@
         "reboot": "Reboot",
         "reboot_to_payload": "Reboot to payload"
     },
-    "buttons": {
-        "button_text_default": "Continue"
-    },
     "errors": {
-        "no_files": "Update file not found!\nPlace '{}' file in the root of your SD card.",
-        "bad_zip_cfw": "Update file is missing some necessary files!\nPlease obtain a valid '{}' file.",
-        "bad_zip_dongle": "Dongle update file is missing!\nPlease obtain a valid '{}' file.",
-        "usb_error": "USB is not available!\nPlease restart the application and try again.",
-        "no_space": "Insufficient space left on the SD card."
+        "no_accounts_selected": "No accounts selected!"
     }
 }

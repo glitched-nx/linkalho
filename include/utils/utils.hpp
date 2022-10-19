@@ -17,7 +17,7 @@ void sendLedPattern(HidsysNotificationLedPattern pattern);
 const std::string getPayload();
 bool isErista();
 HardwareType getHardwareType();
-const std::string getLanguage();
+const std::string getLocale();
 const std::string getTimezone();
 Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_srv);
 Result baasAdministrator_isLinkedWithNintendoAccount(Service *admin_srv, bool *out_linked);
