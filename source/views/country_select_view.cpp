@@ -5,7 +5,7 @@
 using namespace std;
 using namespace brls::i18n::literals;
 
-CountrySelectView::CountrySelectView() : SelectListItem("translations/main_menu/select_profile_country"_i18n, {"Portugal"}, 0)
+CountrySelectView::CountrySelectView() : SelectListItem("translations/country_select_view/title"_i18n, {"Portugal"}, 0)
 {
     vector<string> countryList = {};
 

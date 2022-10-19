@@ -1,7 +1,5 @@
 {
     "main_menu": {
-        "select_profile_country": "Select country for linked accounts",
-        "select_users": "Select accounts to link/unlink",
         "info_text": "Found {} account{}\nReboot to payload {}",
         "reboot_payload_disabled": "disabled",
         "reboot_payload_inactive": "inactive ({} not found)",
@@ -33,6 +31,18 @@
         "warning": "Unlinking will change users accounts.\n(Your saves will be preserved)\n\nIf any of the selected accounts had a NNID link, it will be erased!",
         "working": "Uninking...",
         "complete": "Accounts unlinked!"
+    },
+    "country_select_view": {
+        "title": "Select country for linked accounts"
+    },
+    "account_select_view": {
+        "title": "Select accounts to link/unlink",
+        "select_all": "Select all",
+        "unselect_all": "Unselect all"
+    },
+    "account_list_item": {
+        "linked": "Linked",
+        "not_linked": "Not linked"
     },
     "confirm_view": {
         "continue": "Continue",

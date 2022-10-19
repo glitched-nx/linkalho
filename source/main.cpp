@@ -6,6 +6,7 @@
 #include "views/create_backup_view.hpp"
 #include "views/link_accounts_view.hpp"
 #include "views/unlink_accounts_view.hpp"
+#include "views/account_select_view.hpp"
 
 
 
@@ -203,6 +204,9 @@ int main(int argc, char* argv[])
 
     auto operationList = new brls::List();
 
+    auto accountSelectView = new AccountSelectView();
+    operationList->addView(accountSelectView);
+
     auto linkAccountsView = new LinkAccountsView(canUseLed);
     operationList->addView(linkAccountsView);
 
@@ -221,34 +225,37 @@ int main(int argc, char* argv[])
     });
     operationList->addView(countrySelectView);
 
-    auto userSelectItem = new brls::SelectListItem("translations/main_menu/select_users"_i18n, {"a", "b"});
-    userSelectItem->getValueSelectedEvent()->subscribe([](int result) {
-        cout << "selected3 " << result << endl;
-    });
-    stringstream info_ss;
-    if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
-        s32 acc_count = 0;
-        accountGetUserCount(&acc_count);
-        accountExit();
-        if (acc_count > 0) {
-            info_ss << "Found " << acc_count << " account" << (acc_count == 1 ? "" : "s") << endl;
-        }
-    }
+    // auto accountSelectView = new AccountSelectView();
+    // operationList->addView(accountSelectView);
 
-    HardwareType hwType = getHardwareType();
-    info_ss << "Reboot to payload ";
-    if (hwType != Erista) {
-        info_ss << " disabled" << endl;
-    } else {
-        if (getPayload().empty()) {
-            info_ss << "inactive (" << CUSTOM_PAYLOAD_FILE << " not found)";
-        } else {
-            info_ss << "active";
-        }
-    }
-    userSelectItem->setReduceDescriptionSpacing(true);
-    userSelectItem->setDescription(info_ss.str());
-    operationList->addView(userSelectItem);
+    // auto userSelectItem = new brls::SelectListItem("translations/account_select_view/title"_i18n, {"a", "b"});
+    // userSelectItem->getValueSelectedEvent()->subscribe([](int result) {
+    //     cout << "selected3 " << result << endl;
+    // });
+    // stringstream info_ss;
+    // if (R_SUCCEEDED(accountInitialize(AccountServiceType_System))) {
+    //     s32 acc_count = 0;
+    //     accountGetUserCount(&acc_count);
+    //     accountExit();
+    //     if (acc_count > 0) {
+    //         info_ss << "Found " << acc_count << " account" << (acc_count == 1 ? "" : "s") << endl;
+    //     }
+    // }
+
+    // HardwareType hwType = getHardwareType();
+    // info_ss << "Reboot to payload ";
+    // if (hwType != Erista) {
+    //     info_ss << " disabled" << endl;
+    // } else {
+    //     if (getPayload().empty()) {
+    //         info_ss << "inactive (" << CUSTOM_PAYLOAD_FILE << " not found)";
+    //     } else {
+    //         info_ss << "active";
+    //     }
+    // }
+    // userSelectItem->setReduceDescriptionSpacing(true);
+    // userSelectItem->setDescription(info_ss.str());
+    // operationList->addView(userSelectItem);
 
     rootFrame->setContentView(operationList);
     brls::Application::pushView(rootFrame);

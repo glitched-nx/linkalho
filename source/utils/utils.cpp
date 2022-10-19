@@ -138,3 +138,10 @@ const std::string getTimezone() {
     }
     return "Europe/Lisbon";;
 }
+
+Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_srv) {
+    return serviceDispatchIn(accountGetServiceSession(), 250, user_id,
+        .out_num_objects = 1,
+        .out_objects = out_admin_srv,
+    );
+}
