@@ -62,7 +62,7 @@ This operation creates a backup in `/switch/linkalho/backups`
 This operation creates a backup in `/switch/linkalho/backups`
 
 ### <u>Restore backup</u>
-- Restores any previous state from a backup file. The file must be places in `/switch/linkalho/restore/restore.zip`. If not present, the UI will notify you.
+- Restores any previous state from a backup file. The file must be placed in `/switch/linkalho/restore/restore.zip`. If not present, the UI will notify the user.
 This operation creates a backup in `/switch/linkalho/backups`
 
 ### <u>Create manual backup</u>
