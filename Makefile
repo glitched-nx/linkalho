@@ -37,19 +37,16 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	linkalho
 BUILD		:=	build
-SOURCES		:=	src libs/zipper/src
-RESOURCES	:=	resources
+SOURCES		:=	source source/core source/styles source/utils source/views lib/zipper/source
 DATA		:=	data
-INCLUDES	:=	include libs/zipper/include
+INCLUDES	:=	include lib/zipper/include
 APP_TITLE   :=  Linkalho
 APP_AUTHOR  :=  rrocha
-APP_VERSION :=  1.0.6
-# ROMFS		:=	romfs
-
+APP_VERSION :=  2.0.0
+TARGET		:=	$(shell echo $(APP_TITLE) | tr A-Z a-z)
 ROMFS				:=	resources
-BOREALIS_PATH		:=	libs/borealis
+BOREALIS_PATH		:=	lib/borealis
 BOREALIS_RESOURCES	:=	romfs:/
 
 #---------------------------------------------------------------------------------
@@ -65,7 +62,7 @@ CFLAGS	+=	$(INCLUDE) -D__SWITCH__ \
 			-DAPP_VERSION="\"$(APP_VERSION)\"" \
 			-DAPP_TITLE="\"$(APP_TITLE)\"" -DAPP_TITLE_LOWER="\"$(TARGET)\""
 
-CXXFLAGS	:= $(CFLAGS) -std=c++1z -O2
+CXXFLAGS	:= $(CFLAGS) -std=c++20 -O2 -Wno-reorder
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
@@ -174,8 +171,13 @@ all: $(BUILD)
 
 $(ROMFS):
 	@[ -d $@ ] || mkdir -p $@
-	@echo Preparing ROMFS...
-	@find $(CURDIR)/$(ROMFS) -type f | grep -v json | xargs rm -r
+	@echo Merging ROMFS...
+	@[ -f "$(OUTPUT).nro" ] && rm $(OUTPUT).nro || true
+	@cp -rf $(CURDIR)/$(BOREALIS_PATH)/resources/i18n/. $(CURDIR)/$(ROMFS)/i18n/
+	@rm -rf $(CURDIR)/$(ROMFS)/i18n/fr
+	@rm -rf $(CURDIR)/$(ROMFS)/i18n/*/installer.json $(CURDIR)/$(ROMFS)/i18n/*/main.json $(CURDIR)/$(ROMFS)/i18n/*/popup.json $(CURDIR)/$(ROMFS)/i18n/*/custom_layout.json
+	@cp -rf $(CURDIR)/$(BOREALIS_PATH)/resources/inter $(CURDIR)/$(BOREALIS_PATH)/resources/material $(CURDIR)/$(ROMFS)/
+	@find . -name ".DS_Store" | xargs rm
 
 $(BUILD): $(ROMFS)
 	@[ -d $@ ] || mkdir -p $@
@@ -185,7 +187,7 @@ $(BUILD): $(ROMFS)
 clean:
 	@echo clean ...
 ifeq ($(strip $(APP_JSON)),)
-	@rm -fr $(BUILD) $(TARGET).nro $(TARGET).nacp $(TARGET).elf
+	@rm -fr $(BUILD) $(notdir $(CURDIR))*.nro $(notdir $(CURDIR))*.nacp $(notdir $(CURDIR))*.elf
 else
 	@rm -fr $(BUILD) $(TARGET).nsp $(TARGET).nso $(TARGET).npdm $(TARGET).elf
 endif
