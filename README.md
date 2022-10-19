@@ -12,7 +12,7 @@
 # <b>Linkalho</b>
 
 Linkalho is an homebrew app that will link NNID accounts offline. It links (or unlinks) <b>existing</b> accounts so you won't lose your saves.
-This app does not create a new account. If you create a new account and want to link it, just re-run the app.
+This app does not create new accounts. If you create a new account and want to link it, just re-run the app.
 
 <br>
 
@@ -27,9 +27,6 @@ Do you like this app and find it useful? You can buy me a coffee clicking the li
 <br>
 
 ## <b>Frequently Asked Questions</b>:
-- Why can't I choose which account to link/unlink?
-  - This feature is not planned due to the extra complexity of the eventual cleanup process for previously linked accounts. If someone wants to contribute with a PR for it, I'll gladly review it and merge it into the app.
-
 - Why can't I navigate the app via touchscreen or using the thumbs ticks?
   - This is a very simple and straightforward app that most users will only use once or twice. Unless Borealis developers implement this natively, there are no plans for me to extend their feature set.
 
@@ -37,7 +34,7 @@ Do you like this app and find it useful? You can buy me a coffee clicking the li
   - No! You have a hacked switch. Online is always a risk.
 
 - Can this app do "place whatever question here"?
-  - You can start by reading the [previous section](https://github.com/rdmrocha/linkalho#why-do-i-need-this-app). This app will allow you to link/unlink a fake/generated NNID to your user accounts without the need for an internet connection, and that's it. If you still fail to understand what this is and it's purpose, it's highly likely that you simply don't need this app. Worry not: if you ever need it, you'll know it.
+  - You can start by reading the [previous section](https://github.com/rdmrocha/linkalho#why-do-i-need-this-app). This app will allow you to link/unlink a fake/generated NNID to your user accounts without the need for an internet connection, and that's it. If you still fail to understand what this is and its purpose, it's highly likely that you simply don't need this app. Worry not: if you ever need it, you'll know it.
 
 <br>
 
@@ -56,22 +53,28 @@ Reboot to payload is not supported on Mariko hardware!
 
 ## <b>Usage</b>:
 
-### <u>Link all accounts</u>
-- Will link all accounts on the console. If any of the existing accounts is already linked, it will be re-linked.
+### <u>Link selected accounts</u>
+- Will link all selected accounts from the ones present on the console. If any of the existing accounts is already linked, it will be re-linked (regardless of the NNIDs being officially linked or not).
 This operation creates a backup in `/switch/linkalho/backups`
 
-### <u>Unlink all accounts</u>
-- Will remove all NNID linking from any accounts on the console regardless of the NNIDs being officially linked or not.
+### <u>Unlink selected accounts</u>
+- Will remove NNID linking from any of the selected accounts on the console regardless of the NNIDs being officially linked or not.
 This operation creates a backup in `/switch/linkalho/backups`
 
 ### <u>Restore backup</u>
-- Restores any previous state from a backup file. The file must be places in `/switch/linkalho/restore/restore.zip`
+- Restores any previous state from a backup file. The file must be places in `/switch/linkalho/restore/restore.zip`. If not present, the UI will notify you.
 This operation creates a backup in `/switch/linkalho/backups`
 
 ### <u>Create manual backup</u>
 - Will create a backup in `/switch/linkalho/backups`.
-All linking and unlinking operations will produce a backup before making changes.
+All linking and unlinking operations will automatically produce a backup before making changes.
 <b>You should only use this option if you want to manually create a backup!</b>
+
+### <u>Select country for linked accounts</u>
+- Allows the user to customize the country that will be injected into the linked account. This has impact in some software by showing the appropriate flag (like in mk8).
+
+### <u>Select accounts to link/unlink</u>
+- Allows the user to pick which accounts are going to be linked/unlinked. It defaults to **_all_**. If no accounts are selected and the user tries to perform a link or unlink operation, the application will show an error.
 
 <br>
 
@@ -85,6 +88,8 @@ All linking and unlinking operations will produce a backup before making changes
 <p align="center"><img src="raw/screenshot7.jpg"></p>
 <p align="center"><img src="raw/screenshot8.jpg"></p>
 <p align="center"><img src="raw/screenshot9.jpg"></p>
+<p align="center"><img src="raw/screenshot10.jpg"></p>
+<p align="center"><img src="raw/screenshot11.jpg"></p>
 
 <br>
 
