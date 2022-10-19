@@ -1,10 +1,4 @@
 {
-    "main_menu": {
-        "info_text": "Found {} account{}\nReboot to payload {}",
-        "reboot_payload_disabled": "disabled",
-        "reboot_payload_inactive": "inactive ({} not found)",
-        "reboot_payload_active": "active"
-    },
     "restore_backup_view": {
         "title": "Restore backup",
         "not_found_dialog_hint": "Restore file not found!",
@@ -38,7 +32,12 @@
     "account_select_view": {
         "title": "Select accounts to link/unlink",
         "select_all": "Select all",
-        "unselect_all": "Unselect all"
+        "unselect_all": "Unselect all",
+        "selected_count": "{}/{} selected",
+        "extra_info": "Found {} account{}\nReboot to payload {}",
+        "reboot_payload_disabled": "disabled",
+        "reboot_payload_inactive": "inactive ({} not found)",
+        "reboot_payload_active": "active"
     },
     "account_list_item": {
         "linked": "Linked",

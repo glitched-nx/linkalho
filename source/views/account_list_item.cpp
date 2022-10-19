@@ -30,3 +30,7 @@ void AccountListItem::forceState(bool state) {
     this->setChecked(this->toggleState);
     ListItem::onClick();
 }
+
+const SwitchProfile& AccountListItem::getAccountProfile() {
+    return this->accountProfile;
+}

@@ -41,13 +41,13 @@ RestoreBackupView::RestoreBackupView(bool canUseLed) : ListItem("translations/re
         this->getClickEvent()->subscribe([](brls::View* view) {
             brls::Dialog* dialog = new brls::Dialog(fmt::format("translations/restore_backup_view/not_found_dialog_text"_i18n, RESTORE_FILE_PATH));
 
-            dialog->addButton(fmt::format("translations/restore_backup_view/not_found_dialog_btn"_i18n), [dialog](brls::View* view) {
+            dialog->addButton("translations/restore_backup_view/not_found_dialog_btn"_i18n, [dialog](brls::View* view) {
                 dialog->close();
             });
             dialog->open();
             dialog->registerAction("", brls::Key::PLUS, []{return true;}, true);
             dialog->updateActionHint(brls::Key::PLUS, ""); // make the change visible
         });
-        this->setValue(fmt::format("translations/restore_backup_view/not_found_dialog_hint"_i18n), true, false);
+        this->setValue("translations/restore_backup_view/not_found_dialog_hint"_i18n, true, false);
     }
 }

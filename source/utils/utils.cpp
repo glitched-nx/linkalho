@@ -128,7 +128,7 @@ const std::string getLanguage() {
     if (R_SUCCEEDED(setGetSystemLanguage(&languageCode)) && languageCode) {
         return std::string(reinterpret_cast<char*>(&languageCode));
     }
-    return "en-US";
+    return DEFAULT_LANGUAGE;
 }
 
 const std::string getTimezone() {
@@ -136,7 +136,7 @@ const std::string getTimezone() {
     if (R_SUCCEEDED(setsysGetDeviceTimeZoneLocationName(&tl))) {
         return tl.name;
     }
-    return "Europe/Lisbon";;
+    return DEFAULT_TIMEZONE;
 }
 
 Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_srv) {
@@ -144,4 +144,30 @@ Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_
         .out_num_objects = 1,
         .out_objects = out_admin_srv,
     );
+}
+
+Result baasAdministrator_isLinkedWithNintendoAccount(Service *admin_srv, bool *out_linked) {
+    return serviceDispatchOut(admin_srv, 250, *out_linked);
+}
+
+Result baasAdministrator_deleteRegistrationInfoLocally(Service *admin_srv) {
+    return serviceDispatch(admin_srv, 203);
+}
+
+Result unlinkLocally(const AccountUid user_id) {
+    Service baas;
+    auto rc = getBaasAccountAdministrator(user_id, &baas);
+    if(R_SUCCEEDED(rc)) {
+        bool linked = false;
+        rc = baasAdministrator_isLinkedWithNintendoAccount(&baas, &linked);
+        std::cout << "is linked:" << linked << std::endl;
+        if(R_SUCCEEDED(rc) && linked) {
+            rc = baasAdministrator_deleteRegistrationInfoLocally(&baas);
+            std::cout << (R_SUCCEEDED(rc) ? "Unlink successful" : "Unlink failed") << std::endl;
+        } else {
+            std::cout << (R_SUCCEEDED(rc) ? "Not linked" : "Could not query isLinkedWithNintendoAccount") << std::endl;
+        }
+        serviceClose(&baas);
+    } else {std::cout << "could not elevate to baas administrator" << std::endl;}
+    return rc;
 }

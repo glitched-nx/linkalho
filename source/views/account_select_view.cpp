@@ -1,10 +1,10 @@
 #include "views/account_select_view.hpp"
-#include "views/account_list_item.hpp"
 #include "utils/utils.hpp"
-#include <string>
+#include "core/shared_settings.hpp"
+#include "constants.hpp"
 #include <switch.h>
-#include <sstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 using namespace brls::i18n::literals;
@@ -14,11 +14,34 @@ bool isLinked(AccountUid selectedUser) {
     Service baas;
     const auto rc = getBaasAccountAdministrator(selectedUser, &baas);
     if(R_SUCCEEDED(rc)) {
-        // IsLinkedWithNintendoAccount service
-        serviceDispatchOut(&baas, 250, linked);
+        baasAdministrator_isLinkedWithNintendoAccount(&baas, &linked);
         serviceClose(&baas);
     }
     return linked;
+}
+
+void AccountSelectView::computeValue() {
+    this->setValue(fmt::format("translations/account_select_view/selected_count"_i18n, this->selectionSet.size(), this->switchProfiles.size()), false, false);
+    HardwareType hwType = getHardwareType();
+    auto reboot_payload_text = "translations/account_select_view/reboot_payload_disabled"_i18n;
+    if (hwType == Erista) {
+        if (getPayload().empty()) {
+            reboot_payload_text = fmt::format("translations/account_select_view/reboot_payload_inactive"_i18n, CUSTOM_PAYLOAD_FILE);
+        } else {
+            reboot_payload_text = "translations/account_select_view/reboot_payload_active"_i18n;
+        }
+    }
+    this->setDescription(fmt::format("translations/account_select_view/extra_info"_i18n, this->switchProfiles.size(), (this->switchProfiles.size() == 1 ? "" : "s"), reboot_payload_text));
+}
+
+void AccountSelectView::updateSharedSettings() {
+    vector<SwitchProfile> selected;
+    for (auto p: this->switchProfiles) {
+        if (this->selectionSet.find(p.uid_str) != this->selectionSet.end()) {
+            selected.emplace_back(p);
+        }
+    }
+    SharedSettings::instance().setSelectedProfiles(selected);
 }
 
 AccountSelectView::AccountSelectView() : ListItem("translations/account_select_view/title"_i18n)
@@ -28,7 +51,7 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
         s32 userCount = 0;
 
         if (R_SUCCEEDED(accountListAllUsers(uids, ACC_USER_LIST_SIZE, &userCount))) {
-            this->accountListItems.reserve(userCount);
+            this->switchProfiles.reserve(userCount);
 
             for (int i = 0; i < userCount; i++) {
                 // Icon data
@@ -41,7 +64,6 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
 
                 if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) && R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL && R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))) {
                     stringstream uid_str;
-                    uid_str << endl;
                     uid_str << hex << (uid.uid[0] & 0xffffffff) << "-";
                     uid_str << ((uid.uid[0] >> 32) & 0xffff) << "-" << ((uid.uid[0] >> 48) & 0xffff) << "-";
                     uid_str << (uid.uid[1] & 0xff) << ((uid.uid[1] >> 8) & 0xff) << "-";
@@ -49,14 +71,15 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
 
                     accountProfileClose(&profile);
 
-                    auto item = new AccountListItem(SwitchProfile{
+                    auto item = SwitchProfile {
                         .id   = uid,
                         .uid_str = uid_str.str(),
                         .name = string(profileBase.nickname, 0x20),
                         .icon = make_pair(iconBuffer, imageSize),
                         .isLinked = isLinked(uid)
-                    });
-                    this->accountListItems.emplace_back(item);
+                    };
+                    this->switchProfiles.emplace_back(item);
+                    this->selectionSet.insert(item.uid_str);
                 }
             }
         }
@@ -69,28 +92,48 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
         auto accountSelectFrame = new brls::AppletFrame(true, true);
         accountSelectFrame->setTitle("translations/account_select_view/title"_i18n);
 
-        auto accountList = new brls::List();
+        this->accountListItems.clear();
+        this->accountListItems.reserve( this->switchProfiles.size());
 
-        for (auto item : this->accountListItems) {
+        auto accountList = new brls::List();
+        for (auto p : this->switchProfiles) {
+            auto item = new AccountListItem(p, this->selectionSet.find(p.uid_str) != this->selectionSet.end());
+            item->getClickEvent()->subscribe([this](View* v){
+                auto itemPtr = reinterpret_cast<AccountListItem*>(v);
+                if (itemPtr->getToggleState()) {
+                    this->selectionSet.insert(itemPtr->getAccountProfile().uid_str);
+                } else {
+                    this->selectionSet.erase(itemPtr->getAccountProfile().uid_str);
+                }
+                this->updateSharedSettings();
+            });
+            this->accountListItems.emplace_back(item);
             accountList->addView(item);
         }
-
         accountSelectFrame->setContentView(accountList);
+
         brls::Application::pushView(accountSelectFrame);
 
         accountSelectFrame->registerAction("translations/account_select_view/unselect_all"_i18n, brls::Key::L, [this] {
-            for (auto item : this->accountListItems) {
+            for (auto item: this->accountListItems) {
                 item->forceState(false);
             }
             return true;
         });
         accountSelectFrame->registerAction("translations/account_select_view/select_all"_i18n, brls::Key::R, [this] {
-            for (auto item : this->accountListItems) {
+            for (auto item: this->accountListItems) {
                 item->forceState(true);
             }
+            return true;
+        });
+        accountSelectFrame->registerAction("translations/confirm_view/back"_i18n, brls::Key::B, [this, &accountList] {
+            this->computeValue();
+            brls::Application::popView();
             return true;
         });
         accountSelectFrame->registerAction("", brls::Key::PLUS, [this]{return true;}, true);
         accountSelectFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
     });
+    this->computeValue();
+    this->updateSharedSettings();
 }

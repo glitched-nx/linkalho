@@ -15,4 +15,5 @@ public:
 
     bool getToggleState();
     void forceState(bool state);
+    const SwitchProfile& getAccountProfile();
 };

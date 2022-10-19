@@ -10,6 +10,7 @@ class ConfirmView : public brls::View
     brls::Label* label = nullptr;
     std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
     bool reboot = false;
+    bool isLastStage = false;
     bool canUseLed = false;
 
   public:

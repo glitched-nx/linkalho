@@ -10,6 +10,7 @@ using namespace brls::i18n::literals;
 ConfirmView::ConfirmView(brls::StagedAppletFrame* frame, const std::string& text, bool reboot, bool canUseLed): reboot(reboot), canUseLed(canUseLed)
 {
     auto payloadFile = getPayload();
+    this->isLastStage = frame->isLastStage();
 
     string buttonLabel = "translations/confirm_view/continue"_i18n;
     if (reboot) {
@@ -21,14 +22,14 @@ ConfirmView::ConfirmView(brls::StagedAppletFrame* frame, const std::string& text
 
     this->button->setParent(this);
     this->button->getClickEvent()->subscribe([frame, this, payloadFile](View* view) {
-        if (!frame->isLastStage())
+        if (!this->isLastStage)
             frame->nextStage();
         else if (this->reboot) {
             if (!isErista() || payloadFile.empty() || !rebootToPayload(payloadFile.c_str())) {
                 attemptForceReboot();
             }
             brls::Application::popView();
-        }
+        } else brls::Application::popView();
     });
 
     this->label = new brls::Label(brls::LabelStyle::DIALOG, text, true);
@@ -45,7 +46,7 @@ ConfirmView::ConfirmView(brls::StagedAppletFrame* frame, const std::string& text
 
 void ConfirmView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx)
 {
-    if (!this->reboot) {
+    if (!this->reboot && !this->isLastStage) {
         auto end = std::chrono::high_resolution_clock::now();
         auto missing = std::max(3l - std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 0l);
         auto text =  std::string(this->reboot ? "translations/confirm_view/reboot"_i18n: "translations/confirm_view/continue"_i18n);
