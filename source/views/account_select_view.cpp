@@ -5,23 +5,13 @@
 #include <switch.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 using namespace std;
 using namespace brls::i18n::literals;
 
-bool isLinked(AccountUid selectedUser) {
-    bool linked = false;
-    Service baas;
-    const auto rc = getBaasAccountAdministrator(selectedUser, &baas);
-    if(R_SUCCEEDED(rc)) {
-        baasAdministrator_isLinkedWithNintendoAccount(&baas, &linked);
-        serviceClose(&baas);
-    }
-    return linked;
-}
-
 void AccountSelectView::computeValue() {
-    this->setValue(fmt::format("translations/account_select_view/selected_count"_i18n, this->selectionSet.size(), this->switchProfiles.size()), false, false);
+    this->setValue(fmt::format("translations/account_select_view/selected_count"_i18n, SharedSettings::instance().getSelectedCount(), SharedSettings::instance().getProfileCount()), false, false);
     HardwareType hwType = getHardwareType();
     auto reboot_payload_text = "translations/account_select_view/reboot_payload_disabled"_i18n;
     if (hwType == Erista) {
@@ -31,17 +21,7 @@ void AccountSelectView::computeValue() {
             reboot_payload_text = "translations/account_select_view/reboot_payload_active"_i18n;
         }
     }
-    this->setDescription(fmt::format("translations/account_select_view/extra_info"_i18n, this->switchProfiles.size(), (this->switchProfiles.size() == 1 ? "" : "s"), reboot_payload_text));
-}
-
-void AccountSelectView::updateSharedSettings() {
-    vector<SwitchProfile> selected;
-    for (auto p: this->switchProfiles) {
-        if (this->selectionSet.find(p.uid_str) != this->selectionSet.end()) {
-            selected.emplace_back(p);
-        }
-    }
-    SharedSettings::instance().setSelectedProfiles(selected);
+    this->setDescription(fmt::format("translations/account_select_view/extra_info"_i18n, SharedSettings::instance().getProfileCount(), (SharedSettings::instance().getProfileCount() == 1 ? "" : "s"), reboot_payload_text));
 }
 
 AccountSelectView::AccountSelectView() : ListItem("translations/account_select_view/title"_i18n)
@@ -51,7 +31,6 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
         s32 userCount = 0;
 
         if (R_SUCCEEDED(accountListAllUsers(uids, ACC_USER_LIST_SIZE, &userCount))) {
-            this->switchProfiles.reserve(userCount);
 
             for (int i = 0; i < userCount; i++) {
                 // Icon data
@@ -64,22 +43,47 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
 
                 if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) && R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL && R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))) {
                     stringstream uid_str;
-                    uid_str << hex << (uid.uid[0] & 0xffffffff) << "-";
-                    uid_str << ((uid.uid[0] >> 32) & 0xffff) << "-" << ((uid.uid[0] >> 48) & 0xffff) << "-";
-                    uid_str << (uid.uid[1] & 0xff) << ((uid.uid[1] >> 8) & 0xff) << "-";
-                    uid_str << hex << ((uid.uid[1] >> 32) & 0xffffffff) << ((uid.uid[1] >> 16) & 0xffff);
+                    uid_str << setfill('0') << setw(8) << hex << (uid.uid[0] & 0xffffffff) << "-";
+                    uid_str << setfill('0') << setw(4) << hex << ((uid.uid[0] >> 32) & 0xffff) << "-";
+                    uid_str << setfill('0') << setw(4) << hex << ((uid.uid[0] >> 48) & 0xffff) << "-";
+                    uid_str << setfill('0') << setw(2) << hex << (uid.uid[1] & 0xff);
+                    uid_str << setfill('0') << setw(2) << hex << ((uid.uid[1] >> 8) & 0xff) << "-";
+                    uid_str << setfill('0') << setw(8) << hex << ((uid.uid[1] >> 32) & 0xffffffff);
+                    uid_str << setfill('0') << setw(4) << ((uid.uid[1] >> 16) & 0xffff);
 
                     accountProfileClose(&profile);
+
+                    // extract current AccountId and NasId
+                    Service baas;
+                    const auto rc = getBaasAccountAdministrator(uid, &baas);
+                    uint64_t account_id = 0;
+                    uint64_t nas_id = 0;
+                    bool linked = false;
+
+                    if(R_SUCCEEDED(rc)) {
+                        if (R_FAILED(baasAdministrator_isLinkedWithNAS(&baas, &linked))) {
+                            cout << "Failed to extract link status" << endl;
+                        }
+                        if (R_FAILED(baasAdministrator_getAccountId(&baas, &account_id))) {
+                            cout << "Failed to extract account_id" << endl;
+                        }
+                        if (R_FAILED(baasAdministrator_getNasId(&baas, &nas_id))) {
+                            cout << "Failed to extract nas_id" << endl;
+                        }
+                        serviceClose(&baas);
+                    }
 
                     auto item = SwitchProfile {
                         .id   = uid,
                         .uid_str = uid_str.str(),
                         .name = string(profileBase.nickname, 0x20),
                         .icon = make_pair(iconBuffer, imageSize),
-                        .isLinked = isLinked(uid)
+                        .is_linked = linked,
+                        .account_id = account_id,
+                        .nas_id = nas_id,
+                        .selected = true
                     };
-                    this->switchProfiles.emplace_back(item);
-                    this->selectionSet.insert(item.uid_str);
+                    SharedSettings::instance().addProfile(item);
                 }
             }
         }
@@ -93,19 +97,14 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
         accountSelectFrame->setTitle("translations/account_select_view/title"_i18n);
 
         this->accountListItems.clear();
-        this->accountListItems.reserve( this->switchProfiles.size());
+        this->accountListItems.reserve( SharedSettings::instance().getProfileCount());
 
         auto accountList = new brls::List();
-        for (auto p : this->switchProfiles) {
-            auto item = new AccountListItem(p, this->selectionSet.find(p.uid_str) != this->selectionSet.end());
+        for (auto& p : SharedSettings::instance().getSwitchProfiles()) {
+            auto item = new AccountListItem(p, p.selected);
             item->getClickEvent()->subscribe([this](View* v){
                 auto itemPtr = reinterpret_cast<AccountListItem*>(v);
-                if (itemPtr->getToggleState()) {
-                    this->selectionSet.insert(itemPtr->getAccountProfile().uid_str);
-                } else {
-                    this->selectionSet.erase(itemPtr->getAccountProfile().uid_str);
-                }
-                this->updateSharedSettings();
+                SharedSettings::instance().setProfileSelected(itemPtr->getAccountProfile().id, itemPtr->getToggleState());
             });
             this->accountListItems.emplace_back(item);
             accountList->addView(item);
@@ -135,5 +134,4 @@ AccountSelectView::AccountSelectView() : ListItem("translations/account_select_v
         accountSelectFrame->updateActionHint(brls::Key::PLUS, ""); // make the change visible
     });
     this->computeValue();
-    this->updateSharedSettings();
 }

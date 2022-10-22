@@ -15,9 +15,6 @@ public:
     AccountSelectView();
 
 private:
-    set<string> selectionSet;
-    vector<SwitchProfile> switchProfiles;
     vector<AccountListItem*> accountListItems;
     void computeValue();
-    void updateSharedSettings();
 };

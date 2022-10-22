@@ -19,6 +19,10 @@ using namespace std;
 using namespace zipper;
 using namespace brls::i18n::literals;
 
+static auto avatorsDir = string(ACCOUNT_PATH) + "/avators";
+static auto baasDir = string(ACCOUNT_PATH) + "/baas";
+static auto nasDir = string(ACCOUNT_PATH) + "/nas";
+
 void shutdownAccount()
 {
     cout << "Attempting to shut down BCAT, account and olsc... ";
@@ -54,14 +58,97 @@ vector<filesystem::path> getDirContents(const string& path, const string& extens
     return contents;
 }
 
+void listFilesDebug() {
+    cout << endl;
+    cout << "Listing " << avatorsDir << endl;
+    for (auto& entry: getDirContents(avatorsDir, ".jpg")) {
+        cout << "[" <<  entry.string() << "]" << endl;
+    }
+    cout << "Listing " << baasDir << endl;
+    for (auto& entry: getDirContents(baasDir, ".dat")) {
+        cout << "[" <<  entry.string() << "]" << endl;
+    }
+    cout << "Listing " << nasDir << endl;
+    for (auto& entry: getDirContents(nasDir, ".dat")) {
+        cout << "[" <<  entry.string() << "]" << endl;
+    }
+    for (auto& entry: getDirContents(nasDir, ".json")) {
+        cout << "[" <<  entry.string() << "]" << endl;
+    }
+    cout << endl;
+}
+
+void cleanupRogueFiles() {
+    set<string> expected_uids;
+    set<string> expected_nas_ids;
+
+    for (const auto& p: SharedSettings::instance().getSwitchProfiles()) {
+        expected_uids.insert(p.uid_str);
+        stringstream nasId_ss;
+        nasId_ss << setfill('0') << setw(16) << hex << p.nas_id;
+        expected_nas_ids.insert(nasId_ss.str());
+    }
+
+    std::error_code ec;
+    for (auto& entry: getDirContents(avatorsDir, ".jpg")) {
+        if (expected_uids.contains(entry.stem().string())) {
+            continue;
+        }
+        if(!filesystem::remove(entry.string(), ec)) {
+            cout << "Error cleaning " << entry << ": " << ec << endl;
+        } else {
+            cout << "Cleaned: " << entry << endl;
+        }
+    }
+    for (auto& entry: getDirContents(baasDir, ".dat")) {
+        if (expected_uids.contains(entry.stem().string())) {
+            continue;
+        }
+        if(!filesystem::remove(entry.string(), ec)) {
+            cout << "Error cleaning " << entry << ": " << ec << endl;
+        } else {
+            cout << "Cleaned: " << entry << endl;
+        }
+    }
+    for (auto& entry: getDirContents(nasDir, ".dat")) {
+        if (expected_nas_ids.contains(entry.stem().string())) {
+            continue;
+        }
+        if(!filesystem::remove(entry.string(), ec)) {
+            cout << "Error cleaning " << entry << ": " << ec << endl;
+        } else {
+            cout << "Cleaned: " << entry << endl;
+        }
+    }
+    for (auto& entry: getDirContents(nasDir, ".json")) {
+        auto stem = entry.stem().string();
+        stem.erase(stem.size() - 5); // remove _user
+        if (expected_nas_ids.contains(stem)) {
+            continue;
+        }
+        if(!filesystem::remove(entry.string(), ec)) {
+            cout << "Error cleaning " << entry << ": " << ec << endl;
+        } else {
+            cout << "Cleaned: " << entry << endl;
+        }
+    }
+
+}
+
 void cleanupMacFiles(const string& path)
 {
     for (auto& entry: filesystem::recursive_directory_iterator(path)) {
         if (!entry.is_regular_file()) {
             continue;
         }
+        std::error_code ec;
         if (entry.path().filename().string() == ".DS_Store") {
-            filesystem::remove_all(entry.path().string());
+            auto remove_result = filesystem::remove_all(entry.path().string(), ec);
+            if(remove_result == static_cast<std::uintmax_t>(-1)) {
+                cout << "Error cleaning Mac files: " << ec << endl;
+            } else {
+                cout << "Cleaned " << remove_result << " files" << endl;
+            }
         }
     }
 }
@@ -119,19 +206,20 @@ void unmountSaveData(FsFileSystem& acc, bool commit=false)
 
 void executeBackup(const string& reason)
 {
-    cleanupMacFiles(RESTORE_PATH);
+    cleanupMacFiles(ACCOUNT_PATH);
 
     time_t t = time(nullptr);
     tm tm = *localtime(&t);
     stringstream backupFile;
     backupFile << BACKUP_PATH << "backup_profiles_" << put_time(&tm, "%Y%m%d_%H%M%S") << "[" << reason << "].zip";
     cout << "Creating backup..." << endl << endl;
+    listFilesDebug();
     Zipper zipper(backupFile.str());
     //auto flags = (Zipper::zipFlags::Better | Zipper::zipFlags::SaveHierarchy);
     zipper.add(string(ACCOUNT_PATH)+"/registry.dat");
-    zipper.add(string(ACCOUNT_PATH)+"/avators");
-    zipper.add(string(ACCOUNT_PATH)+"/baas");
-    zipper.add(string(ACCOUNT_PATH)+"/nas");
+    zipper.add(avatorsDir);
+    zipper.add(baasDir);
+    zipper.add(nasDir);
     zipper.close();
     cout << "Backup created in " << BACKUP_PATH << endl;
 }
@@ -149,26 +237,39 @@ void restoreBackup(const string& backupFullpath)
         ProgressEvent::instance().setStep(2);
         cout << endl << endl  << "Restoring backup... ";
 
-        auto baasDir = string(RESTORE_PATH) + "/baas";
-        filesystem::remove_all(baasDir);
+        std::error_code ec;
+        auto remove_result = filesystem::remove_all(baasDir, ec);
+        if(remove_result == static_cast<std::uintmax_t>(-1)) {
+            cout << "Error cleaning " << baasDir << ": " << ec << endl;
+        } else {
+            cout << "Cleaned " << remove_result << " files from " << baasDir << endl;
+        }
         ProgressEvent::instance().setStep(3);
 
-        auto nasDir = string(RESTORE_PATH) + "/nas";
-        filesystem::remove_all(nasDir);
+        remove_result = filesystem::remove_all(nasDir, ec);
+        if(remove_result == static_cast<std::uintmax_t>(-1)) {
+            cout << "Error cleaning " << nasDir << ": " << ec << endl;
+        } else {
+            cout << "Cleaned " << remove_result << " files from " << nasDir << endl;
+        }
         ProgressEvent::instance().setStep(4);
 
-        auto avatorsDir = string(RESTORE_PATH) + "/avators";
         for (auto& jpgFile: getDirContents(avatorsDir, ".jpg")) {
-            filesystem::remove_all(jpgFile.string());
+            remove_result = filesystem::remove(jpgFile.string(), ec);
+            if(remove_result == static_cast<std::uintmax_t>(-1)) {
+                cout << "Error cleaning " << jpgFile << ": " << ec << endl;
+            } else {
+                cout << "Cleaned " << remove_result << ": " << jpgFile << endl;
+            }
         }
         ProgressEvent::instance().setStep(5);
 
         Unzipper unzipper(backupFullpath);
-        unzipper.extract(RESTORE_PATH);
+        unzipper.extract(ACCOUNT_PATH);
         unzipper.close();
         ProgressEvent::instance().setStep(6);
         cout << "Success!" << endl;
-
+        listFilesDebug();
         unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(7);
     }
@@ -180,57 +281,55 @@ void restoreBackup(const string& backupFullpath)
 }
 
 void unlinkSingleAccount(const SwitchProfile& profile) {
-    // first we open the baas file if exists
-    string baas_file = string(ACCOUNT_PATH) + "/baas/" + profile.uid_str + ".dat";
-    if (!filesystem::exists(baas_file)) {
-        cout << "Baas file not found: " << baas_file << endl;
+
+    if (!profile.is_linked) {
+        cout << profile.uid_str << " profile not linked." << endl;
         return;
     }
 
-    // then we read and extract the nasId
-    std::ifstream baas_ifs(baas_file, std::ios::binary);
-    baas_ifs.ignore(16);
-
-    uint64_t count;
-    baas_ifs.read((char*)&count, 16);
-    baas_ifs.close();
+    std::error_code ec;
+    string baas_file = string(ACCOUNT_PATH) + "/baas/" + profile.uid_str + ".dat";
+    if (filesystem::exists(baas_file)) {
+        if (!filesystem::remove(baas_file, ec)) {
+            cout << "Error removing baas_file: " << baas_file << " error: " << ec << endl;
+        }
+    } else {
+        cout << "Baas file not found: " << baas_file << endl;
+    }
 
     stringstream nasId_ss;
-    nasId_ss << std::setfill('0') << std::setw(16) << std::hex << count;
+    nasId_ss << setfill('0') << setw(16) << hex << profile.nas_id;
 
-    std::error_code ec;
     auto nasDatFile = string(ACCOUNT_PATH) + "/nas/" + nasId_ss.str() + ".dat";
     if (filesystem::exists(nasDatFile)) {
         if (!filesystem::remove(nasDatFile, ec)) {
             cout << "Error removing nasDatFile: " << nasDatFile << " error: " << ec << endl;
-            return;
         }
+    } else {
+        cout << "nasDat file not found: " << nasDatFile << endl;
     }
+
     auto nasJsonFile = string(ACCOUNT_PATH) + "/nas/" + nasId_ss.str() + "_user.json";
     if (filesystem::exists(nasJsonFile)) {
         if (!filesystem::remove(nasJsonFile, ec)) {
             cout << "Error removing nasJsonFile: " << nasJsonFile << " error: " << ec << endl;
-            return;
         }
-    }
-
-    if (!filesystem::remove(baas_file, ec)) {
-        cout << "Error removing baas_file: " << baas_file << " error: " << ec << endl;
-        return;
+    } else {
+        cout << "nasJson file not found: " << nasJsonFile << endl;
     }
 }
 
 void linkAccounts()
 {
-    auto profileCount = SharedSettings::instance().getSelectedProfiles().size();
-    if (profileCount == 0) {
+    auto selectedCount = SharedSettings::instance().getSelectedCount();
+    if (selectedCount == 0) {
         brls::Application::notify("translations/errors/no_accounts_selected"_i18n);
         brls::Application::popView();
         return;
     }
     try {
         ProgressEvent::instance().reset();
-        ProgressEvent::instance().setTotalSteps(4+profileCount);
+        ProgressEvent::instance().setTotalSteps(5+selectedCount);
 
         FsFileSystem acc = mountSaveData();
         ProgressEvent::instance().setStep(1);
@@ -238,18 +337,22 @@ void linkAccounts()
         executeBackup("link");
         cout << endl << endl  << "Linking accounts... ";
 
-        auto baasDir = string(ACCOUNT_PATH) + "/baas";
         cout << "create=[" << baasDir << "]" << endl;
         filesystem::create_directories(baasDir);
 
-        auto nasDir = string(ACCOUNT_PATH) + "/nas";
         cout << "create=[" << nasDir << "]" << endl;
         filesystem::create_directories(nasDir);
 
         ProgressEvent::instance().setStep(2);
 
-        int c = 3;
-        for (const auto& p: SharedSettings::instance().getSelectedProfiles()) {
+        cleanupRogueFiles();
+        ProgressEvent::instance().setStep(3);
+
+        int c = 4;
+        for (const auto& p: SharedSettings::instance().getSwitchProfiles()) {
+            if (!p.selected) {
+                continue;
+            }
             unlinkSingleAccount(p);
 
             Generator gen;
@@ -266,20 +369,10 @@ void linkAccounts()
             ProgressEvent::instance().setStep(c++);
         }
 
-        cout << "Listing " << baasDir << endl;
-        for (auto& entry: getDirContents(baasDir, ".dat")) {
-            cout << "[" <<  entry.string() << "]" << endl;
-        }
-        cout << "Listing " << nasDir << endl;
-        for (auto& entry: getDirContents(nasDir, ".dat")) {
-            cout << "[" <<  entry.string() << "]" << endl;
-        }
-        for (auto& entry: getDirContents(nasDir, ".json")) {
-            cout << "[" <<  entry.string() << "]" << endl;
-        }
-
         ProgressEvent::instance().setStep(c++);
         cout << "Success!" << endl;
+
+        listFilesDebug();
 
         unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(c++);
@@ -293,32 +386,41 @@ void linkAccounts()
 
 void unlinkAccounts()
 {
-    auto profileCount = SharedSettings::instance().getSelectedProfiles().size();
-    if (profileCount == 0) {
+    auto selectedCount = SharedSettings::instance().getSelectedCount();
+    if (selectedCount == 0) {
         brls::Application::notify("translations/errors/no_accounts_selected"_i18n);
         brls::Application::popView();
         return;
     }
     try {
         ProgressEvent::instance().reset();
-        ProgressEvent::instance().setTotalSteps(3+profileCount);
+        ProgressEvent::instance().setTotalSteps(4+selectedCount);
 
         FsFileSystem acc = mountSaveData();
         ProgressEvent::instance().setStep(1);
 
         executeBackup("unlink");
         ProgressEvent::instance().setStep(2);
-        cout << endl << endl  << "Unlinking accounts... ";
+        cout << endl << endl << "Unlinking accounts... ";
 
-        int c = 3;
-        for (const auto& p: SharedSettings::instance().getSelectedProfiles()) {
+        cleanupRogueFiles();
+        ProgressEvent::instance().setStep(3);
+
+        int c = 4;
+        for (const auto& p: SharedSettings::instance().getSwitchProfiles()) {
+            if (!p.selected) {
+                continue;
+            }
             unlinkSingleAccount(p);
             ProgressEvent::instance().setStep(c++);
         }
 
         cout << "Success!" << endl;
+
+        listFilesDebug();
+
         unmountSaveData(acc, true);
-        ProgressEvent::instance().setStep(c);
+        ProgressEvent::instance().setStep(c++);
     }
     catch (exception& e) // Not using filesystem_error since bad_alloc can throw too.
     {
@@ -339,6 +441,7 @@ void manualBackup()
         executeBackup("manual");
         cout << "Success!" << endl;
 
+        listFilesDebug();
         unmountSaveData(acc, true);
         ProgressEvent::instance().setStep(3);
     }

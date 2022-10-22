@@ -11,7 +11,6 @@
 #else
 # define ACCOUNT_PATH "account:/su"
 #endif
-# define RESTORE_PATH ACCOUNT_PATH
 
 #define CUSTOM_PAYLOAD_FILE "reboot.bin"
 #define CUSTOM_PAYLOAD_FILE_PATH LOCAL_PATH CUSTOM_PAYLOAD_FILE
