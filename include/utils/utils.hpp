@@ -20,4 +20,6 @@ HardwareType getHardwareType();
 const std::string getLocale();
 const std::string getTimezone();
 Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_srv);
-Result baasAdministrator_isLinkedWithNintendoAccount(Service *admin_srv, bool *out_linked);
+Result baasAdministrator_isLinkedWithNAS(Service *admin_srv, bool *out_linked);
+Result baasAdministrator_getAccountId(Service *admin_srv, u64 *out_id);
+Result baasAdministrator_getNasId(Service *admin_srv, u64 *out_id);

@@ -3,7 +3,7 @@
 using namespace brls::i18n::literals;
 
 AccountListItem::AccountListItem(const SwitchProfile& profile, bool initialValue)
-    : ListItem(profile.name, "", (profile.isLinked ? "translations/account_list_item/linked"_i18n : "translations/account_list_item/not_linked"_i18n))
+    : ListItem(profile.name, "", (profile.is_linked ? "translations/account_list_item/linked"_i18n : "translations/account_list_item/not_linked"_i18n))
     , toggleState(initialValue)
     , accountProfile(profile)
 {

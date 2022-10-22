@@ -11,7 +11,7 @@ LinkAccountsView::LinkAccountsView(bool canUseLed) : ListItem("translations/link
 {
     this->getClickEvent()->subscribe([canUseLed](brls::View* view) {
 
-        if (SharedSettings::instance().getSelectedProfiles().size() == 0) {
+        if (SharedSettings::instance().getSelectedCount() == 0) {
             brls::Application::notify("translations/errors/no_accounts_selected"_i18n);
             return;
         }

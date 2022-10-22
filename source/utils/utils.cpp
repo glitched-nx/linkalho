@@ -139,6 +139,14 @@ const std::string getTimezone() {
     return DEFAULT_TIMEZONE;
 }
 
+Result baasAdministrator_getAccountId(Service *admin_srv, u64 *out_id) {
+    return serviceDispatchOut(admin_srv, 1, *out_id);
+}
+
+Result baasAdministrator_getNasId(Service *admin_srv, u64 *out_id) {
+    return serviceDispatchOut(admin_srv, 120, *out_id);
+}
+
 Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_srv) {
     return serviceDispatchIn(accountGetServiceSession(), 250, user_id,
         .out_num_objects = 1,
@@ -146,7 +154,7 @@ Result getBaasAccountAdministrator(const AccountUid user_id, Service *out_admin_
     );
 }
 
-Result baasAdministrator_isLinkedWithNintendoAccount(Service *admin_srv, bool *out_linked) {
+Result baasAdministrator_isLinkedWithNAS(Service *admin_srv, bool *out_linked) {
     return serviceDispatchOut(admin_srv, 250, *out_linked);
 }
 
@@ -159,7 +167,7 @@ Result unlinkLocally(const AccountUid user_id) {
     auto rc = getBaasAccountAdministrator(user_id, &baas);
     if(R_SUCCEEDED(rc)) {
         bool linked = false;
-        rc = baasAdministrator_isLinkedWithNintendoAccount(&baas, &linked);
+        rc = baasAdministrator_isLinkedWithNAS(&baas, &linked);
         std::cout << "is linked:" << linked << std::endl;
         if(R_SUCCEEDED(rc) && linked) {
             rc = baasAdministrator_deleteRegistrationInfoLocally(&baas);

@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <set>
+#include <switch.h>
 
 using namespace std;
 
@@ -13,9 +15,16 @@ private:
     SharedSettings() {}
 
     string countryCode = DEFAULT_COUNTRY_CODE;
-    vector<SwitchProfile> selectedProfiles;
+    vector<SwitchProfile> switchProfiles;
 
 public:
+
+    void printSelection() {
+        for(auto& p: this->switchProfiles) {
+            cout << p.uid_str << " - " << (p.selected ? "selected" : "not selected") << endl;
+        }
+    }
+
     SharedSettings(const SharedSettings&) = delete;
     SharedSettings& operator=(const SharedSettings &) = delete;
     SharedSettings(SharedSettings &&) = delete;
@@ -35,17 +44,28 @@ public:
         cout << "new country code: " << code << endl;
     }
 
-    inline const vector<SwitchProfile>& getSelectedProfiles() {
-        return selectedProfiles;
+    void setProfileSelected(const AccountUid id, bool selected) {
+        for(auto& p: this->switchProfiles) {
+            if (p.id.uid[0] == id.uid[0] && p.id.uid[1] == id.uid[1]) {
+                p.selected = selected;
+            }
+        }
+        printSelection();
     }
 
-    void setSelectedProfiles(const vector<SwitchProfile>& profiles) {
-        selectedProfiles.clear();
-        selectedProfiles.reserve(profiles.size());
-        cout << "new country profile list: " << endl;
-        for(auto p: profiles) {
-            selectedProfiles.emplace_back(p);
-            cout << "[" << p.name << "]" << endl;
-        }
+    size_t getSelectedCount() {
+        return count_if(this->switchProfiles.begin(), this->switchProfiles.end(), [](const SwitchProfile& p) { return p.selected; });
+    }
+
+    size_t getProfileCount() {
+        return this->switchProfiles.size();
+    }
+
+    void addProfile(const SwitchProfile& p) {
+        this->switchProfiles.emplace_back(p);
+    }
+
+    vector<SwitchProfile>& getSwitchProfiles() {
+        return this->switchProfiles;
     }
 };
