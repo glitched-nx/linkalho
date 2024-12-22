@@ -38,14 +38,14 @@ Gefällt dir diese App und findest du sie nützlich? Du kannst mir einen Kaffee 
 <br>
 
 ## <b>Installation</b>:
-- Platziere die .nro-Datei im Ordner `/switch/linkalho` deiner SD-Karte.
+- Platziere die .nro-Datei im Ordner `/switch/linkalho/` deiner SD-Karte.
 - Gehe zur Homebrew-App und starte Linkalho
 
 <br>
 
 ### <u>Neustart zum Payload</u>
 Nach Abschluss der ausgewählten Operation startet Linkalho zu einem vorhandenen Payload neu, wenn:
-- die Konsolen-Hardware Erista ist und der Benutzer eine Payload-Datei im Anwendungsverzeichnis platziert (`/switch/linkalho/reboot.bin`)
+- die Konsolen-Hardware Erista ist und der Benutzer eine Payload-Datei im Anwendungsverzeichnis platziert (`/bootloader/update.bin`)
 
 Neustart zum Payload wird auf Mariko-Hardware nicht unterstützt!
 <br>
@@ -54,18 +54,18 @@ Neustart zum Payload wird auf Mariko-Hardware nicht unterstützt!
 
 ### <u>Ausgewählte Konten verknüpfen</u>
 - Verknüpft alle ausgewählten Konten von den auf der Konsole vorhandenen. Wenn eines der vorhandenen Konten bereits verknüpft ist, wird es neu verknüpft (unabhängig davon, ob die NNIDs offiziell verknüpft sind oder nicht).
-Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
+Dieser Vorgang erstellt ein Backup in `/linkalho/backups`
 
 ### <u>Ausgewählte Konten trennen</u>
 - Entfernt die NNID-Verknüpfung von allen ausgewählten Konten auf der Konsole, unabhängig davon, ob die NNIDs offiziell verknüpft sind oder nicht.
-Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
+Dieser Vorgang erstellt ein Backup in `/linkalho/backups`
 
 ### <u>Backup wiederherstellen</u>
-- Stellt einen vorherigen Zustand aus einer Backup-Datei wieder her. Die Datei muss sich in `/switch/linkalho/restore/restore.zip` befinden. Wenn nicht vorhanden, wird der Benutzer benachrichtigt.
-Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
+- Stellt einen vorherigen Zustand aus einer Backup-Datei wieder her. Die Datei muss sich in `/linkalho/restore/restore.zip` befinden. Wenn nicht vorhanden, wird der Benutzer benachrichtigt.
+Dieser Vorgang erstellt ein Backup in `/linkalho/backups`
 
 ### <u>Manuelles Backup erstellen</u>
-- Erstellt ein Backup in `/switch/linkalho/backups`.
+- Erstellt ein Backup in `/linkalho/backups`.
 Alle Verknüpfungs- und Trennungsvorgänge erstellen automatisch ein Backup, bevor Änderungen vorgenommen werden.
 <b>Diese Option solltest du nur verwenden, wenn du manuell ein Backup erstellen möchtest!</b>
 

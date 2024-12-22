@@ -16,16 +16,16 @@ brls::Style* VisualOverrides::LinkalhoStyle()
 brls::LibraryViewsThemeVariantsWrapper* VisualOverrides::LinkalhoTheme()
 {
     brls::Theme* custom_light = new brls::HorizonLightTheme();
-    custom_light->buttonPrimaryDisabledBackgroundColor = nvgRGB(136, 90, 75);
-    custom_light->buttonPrimaryDisabledTextColor = nvgRGB(167, 129, 118);
-    custom_light->buttonPrimaryEnabledBackgroundColor = nvgRGB(255, 59, 0);
-    custom_light->buttonPrimaryEnabledTextColor = nvgRGB(255, 247, 255);
+    custom_light->buttonPrimaryDisabledBackgroundColor = nvgRGB(12, 12, 60);
+    custom_light->buttonPrimaryDisabledTextColor = nvgRGB(30, 30, 90);
+    custom_light->buttonPrimaryEnabledBackgroundColor = nvgRGB(139, 17, 163);
+    custom_light->buttonPrimaryEnabledTextColor = nvgRGB(251, 186, 43);
 
     brls::Theme* custom_dark = new brls::HorizonDarkTheme();
-    custom_dark->buttonPrimaryDisabledBackgroundColor = nvgRGB(136, 90, 75);
-    custom_dark->buttonPrimaryDisabledTextColor = nvgRGB(167, 129, 118);
-    custom_dark->buttonPrimaryEnabledBackgroundColor = nvgRGB(255, 59, 0);
-    custom_dark->buttonPrimaryEnabledTextColor = nvgRGB(255, 247, 255);
+    custom_dark->buttonPrimaryDisabledBackgroundColor = nvgRGB(12, 12, 60);
+    custom_dark->buttonPrimaryDisabledTextColor = nvgRGB(35, 35, 90);
+    custom_dark->buttonPrimaryEnabledBackgroundColor = nvgRGB(139, 17, 163);
+    custom_dark->buttonPrimaryEnabledTextColor = nvgRGB(251, 186, 43);
 
     return new brls::LibraryViewsThemeVariantsWrapper(custom_light, custom_dark);
 }
