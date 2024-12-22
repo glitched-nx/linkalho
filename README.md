@@ -1,80 +1,79 @@
-[![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
+[![Spendiere mir einen Kaffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://paypal.me/rdmrocha)
 
-![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
-[![GitHub release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/)
+![Lizenz](https://img.shields.io/badge/License-GPLv3-blue.svg)
+[![GitHub Release](https://img.shields.io/github/release/rdmrocha/linkalho.svg)](https://github.com/rdmrocha/linkalho/releases/latest/)
 
-[![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
-[![Github all releases](https://img.shields.io/github/downloads/rdmrocha/linkalho/latest/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
-
+[![Github Downloads gesamt](https://img.shields.io/github/downloads/rdmrocha/linkalho/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
+[![Github aktuelle Downloads](https://img.shields.io/github/downloads/rdmrocha/linkalho/latest/total.svg)](https://GitHub.com/rdmrocha/linkalho/releases/latest/)
 
 <p align="left"><img src="icon.jpg"></p>
 
 # <b>Linkalho</b>
 
-Linkalho is an homebrew app that will link NNID accounts offline. It links (or unlinks) <b>existing</b> accounts so you won't lose your saves.
-This app does not create new accounts. If you create a new account and want to link it, just re-run the app.
+Linkalho ist eine Homebrew-App, die NNID-Konten offline verknüpft. Sie verknüpft (oder trennt) <b>bestehende</b> Konten, sodass keine Spielstände verloren gehen.
+Diese App erstellt keine neuen Konten. Wenn du ein neues Konto erstellst und es verknüpfen möchtest, führe die App einfach erneut aus.
 
 <br>
 
-## <b>Why do I need this app?</b>
-If you never had issues with games/apps failing to launch until you link your Switch user account and you never experienced issues with certain titles stuck in _Updating game data_ or certain official emulators presenting you with nothing else but a black screen instead of the game selection, then you don't need to use this homebrew.
+## <b>Wozu brauche ich diese App?</b>
+Wenn du nie Probleme beim Starten von Spielen/Apps hattest, bis du dein Switch-Benutzerkonto verknüpft hast, und wenn du nie Probleme mit Titeln hattest, die beim _Aktualisieren der Spieldaten_ hängen bleiben oder bestimmten offiziellen Emulatoren, die nur einen schwarzen Bildschirm anstelle der Spielauswahl zeigen, dann brauchst du diese Homebrew nicht.
 
 <br>
 
-Do you like this app and find it useful? You can buy me a coffee clicking the link below. Thanks!<br>
+Gefällt dir diese App und findest du sie nützlich? Du kannst mir einen Kaffee spendieren, indem du auf den Link unten klickst. Danke!<br>
 <a href="https://paypal.me/rdmrocha"><img src="raw/buy-me-a-coffee.png" width="150px" /></a>
 
 <br>
 
-## <b>Frequently Asked Questions</b>:
-- Why can't I navigate the app via touchscreen or using the thumbs ticks?
-  - This is a very simple and straightforward app that most users will only use once or twice. Unless Borealis developers implement this natively, there are no plans for me to extend their feature set.
+## <b>Häufig gestellte Fragen</b>:
+- Warum kann ich die App nicht per Touchscreen oder mit den Analog-Sticks bedienen?
+  - Dies ist eine sehr einfache und unkomplizierte App, die die meisten Benutzer nur ein- oder zweimal verwenden werden. Solange die Borealis-Entwickler dies nicht nativ implementieren, gibt es keine Pläne meinerseits, deren Funktionsumfang zu erweitern.
 
-- Can I go online with a fake/generated linked account?
-  - No! You have a hacked switch. Online is always a risk.
+- Kann ich mit einem gefälschten/generierten verknüpften Konto online gehen?
+  - Nein! Du hast eine gehackte Switch. Online zu gehen ist immer ein Risiko.
 
-- Can this app do "place whatever question here"?
-  - You can start by reading the [previous section](https://github.com/rdmrocha/linkalho#why-do-i-need-this-app). This app will allow you to link/unlink a fake/generated NNID to your user accounts without the need for an internet connection, and that's it. If you still fail to understand what this is and its purpose, it's highly likely that you simply don't need this app. Worry not: if you ever need it, you'll know it.
+- Kann diese App "beliebige Frage hier einsetzen"?
+  - Lies zunächst den [vorherigen Abschnitt](https://github.com/rdmrocha/linkalho#why-do-i-need-this-app). Diese App ermöglicht es dir, eine gefälschte/generierte NNID mit deinen Benutzerkonten ohne Internetverbindung zu verknüpfen/trennen, das ist alles. Wenn du immer noch nicht verstehst, worum es geht und wozu es dient, brauchst du diese App wahrscheinlich einfach nicht. Keine Sorge: Wenn du sie jemals brauchst, wirst du es wissen.
 
 <br>
 
 ## <b>Installation</b>:
-- Place the .nro file in the `/switch/linkalho` folder of your SDcard.
-- Go to the homebrew app and run Linkalho
+- Platziere die .nro-Datei im Ordner `/switch/linkalho` deiner SD-Karte.
+- Gehe zur Homebrew-App und starte Linkalho
 
 <br>
 
-### <u>Reboot to payload</u>
-After completing the selected operation, Linkalho will reboot to an existing payload if:
-- the console hardware is Erista and the user places a payload file in the application's root (`/switch/linkalho/reboot.bin`)
+### <u>Neustart zum Payload</u>
+Nach Abschluss der ausgewählten Operation startet Linkalho zu einem vorhandenen Payload neu, wenn:
+- die Konsolen-Hardware Erista ist und der Benutzer eine Payload-Datei im Anwendungsverzeichnis platziert (`/switch/linkalho/reboot.bin`)
 
-Reboot to payload is not supported on Mariko hardware!
+Neustart zum Payload wird auf Mariko-Hardware nicht unterstützt!
 <br>
 
-## <b>Usage</b>:
+## <b>Verwendung</b>:
 
-### <u>Link selected accounts</u>
-- Will link all selected accounts from the ones present on the console. If any of the existing accounts is already linked, it will be re-linked (regardless of the NNIDs being officially linked or not).
-This operation creates a backup in `/switch/linkalho/backups`
+### <u>Ausgewählte Konten verknüpfen</u>
+- Verknüpft alle ausgewählten Konten von den auf der Konsole vorhandenen. Wenn eines der vorhandenen Konten bereits verknüpft ist, wird es neu verknüpft (unabhängig davon, ob die NNIDs offiziell verknüpft sind oder nicht).
+Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
 
-### <u>Unlink selected accounts</u>
-- Will remove NNID linking from any of the selected accounts on the console regardless of the NNIDs being officially linked or not.
-This operation creates a backup in `/switch/linkalho/backups`
+### <u>Ausgewählte Konten trennen</u>
+- Entfernt die NNID-Verknüpfung von allen ausgewählten Konten auf der Konsole, unabhängig davon, ob die NNIDs offiziell verknüpft sind oder nicht.
+Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
 
-### <u>Restore backup</u>
-- Restores any previous state from a backup file. The file must be placed in `/switch/linkalho/restore/restore.zip`. If not present, the UI will notify the user.
-This operation creates a backup in `/switch/linkalho/backups`
+### <u>Backup wiederherstellen</u>
+- Stellt einen vorherigen Zustand aus einer Backup-Datei wieder her. Die Datei muss sich in `/switch/linkalho/restore/restore.zip` befinden. Wenn nicht vorhanden, wird der Benutzer benachrichtigt.
+Dieser Vorgang erstellt ein Backup in `/switch/linkalho/backups`
 
-### <u>Create manual backup</u>
-- Will create a backup in `/switch/linkalho/backups`.
-All linking and unlinking operations will automatically produce a backup before making changes.
-<b>You should only use this option if you want to manually create a backup!</b>
+### <u>Manuelles Backup erstellen</u>
+- Erstellt ein Backup in `/switch/linkalho/backups`.
+Alle Verknüpfungs- und Trennungsvorgänge erstellen automatisch ein Backup, bevor Änderungen vorgenommen werden.
+<b>Diese Option solltest du nur verwenden, wenn du manuell ein Backup erstellen möchtest!</b>
 
-### <u>Select country for linked accounts</u>
-- Allows the user to customize the country that will be injected into the linked account. This has impact in some software by showing the appropriate flag (like in mk8).
+### <u>Land für verknüpfte Konten auswählen</u>
+- Ermöglicht dem Benutzer, das Land anzupassen, das in das verknüpfte Konto eingefügt wird. Dies wirkt sich auf einige Software aus, indem die entsprechende Flagge angezeigt wird (wie in MK8).
 
-### <u>Select accounts to link/unlink</u>
-- Allows the user to pick which accounts are going to be linked/unlinked. It defaults to **_all_**. If no accounts are selected and the user tries to perform a link or unlink operation, the application will show an error.
+### <u>Konten zum Verknüpfen/Trennen auswählen</u>
+- Ermöglicht dem Benutzer auszuwählen, welche Konten verknüpft/getrennt werden sollen. Standardmäßig sind **_alle_** ausgewählt. Wenn keine Konten ausgewählt sind und der Benutzer versucht, einen Verknüpfungs- oder Trennungsvorgang durchzuführen, zeigt die Anwendung einen Fehler an.
 
 <br>
 
@@ -93,11 +92,11 @@ All linking and unlinking operations will automatically produce a backup before 
 
 <br>
 
-## <b>Credits</b>
-  - [devkitPro](https://devkitpro.org) for the toolchain!
-  - [natinusala (lib borealis)](https://github.com/natinusala/borealis) for the amazing library that mimicks the Switch's original UI and UX
-  - [sebastiandev (zipper wrapper for minizip)](https://github.com/sebastiandev/zipper/) for their nice wrapper to the minizip
-  - [Kronos2308](https://github.com/Kronos2308) for the help in the initial phases of research.
-  - [SciresM](https://github.com/SciresM) for his "reboot to payload" code and [HamletDuFromage](https://github.com/HamletDuFromage) for the code contributions
-  - **target** for the icon, the beta testing and for supplying crucial files that helped in the creation of the generators.
-  - **boredomisacrime** for the beta testing.
+## <b>Danksagungen</b>
+  - [devkitPro](https://devkitpro.org) für die Toolchain!
+  - [natinusala (lib borealis)](https://github.com/natinusala/borealis) für die großartige Bibliothek, die die originale UI und UX der Switch nachahmt
+  - [sebastiandev (zipper wrapper for minizip)](https://github.com/sebastiandev/zipper/) für ihren praktischen Wrapper für minizip
+  - [Kronos2308](https://github.com/Kronos2308) für die Hilfe in den anfänglichen Forschungsphasen
+  - [SciresM](https://github.com/SciresM) für seinen "Neustart zum Payload"-Code und [HamletDuFromage](https://github.com/HamletDuFromage) für die Code-Beiträge
+  - **target** für das Icon, das Beta-Testing und die Bereitstellung wichtiger Dateien, die bei der Erstellung der Generatoren halfen
+  - **boredomisacrime** für das Beta-Testing
