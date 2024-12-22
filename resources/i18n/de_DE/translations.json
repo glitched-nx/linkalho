@@ -1,0 +1,55 @@
+{
+    "restore_backup_view": {
+        "title": "Backup wiederherstellen",
+        "not_found_dialog_hint": "Backup-Datei nicht gefunden!",
+        "not_found_dialog_text": "Zum Wiederherstellen die Backup-Datei hier ablegen:\n{}\n\nStelle sicher, dass das Backup valide ist, da es die Konsolenpartitionen überschreibt und möglicherweise zum Boot-Fehler führen kann!",
+        "not_found_dialog_btn": "Schließen",
+        "warning": "Die Wiederherstellung überschreibt ALLE Dateien!\n(Deine Spielstände bleiben erhalten)\n\nStelle sicher, dass das Backup valide ist, da es die Konsolenpartitionen überschreibt und möglicherweise zum Boot-Fehler führen kann!",
+        "working": "Stelle wieder her...",
+        "complete": "Backup wiederhergestellt!"
+    },
+    "create_backup_view": {
+        "title": "Manuelles Backup erstellen",
+        "warning": "Beim Verlinken und Entlinken wird automatisch ein Backup erstellt!\n\nNutze diese Option nur, wenn du manuell ein Backup erstellen möchtest.",
+        "working": "Erstelle Backup...",
+        "complete": "Backup erstellt!"
+    },
+    "link_accounts_view": {
+        "title": "Ausgewählte Accounts verlinken",
+        "warning": "Das Verlinken überschreibt alle bestehenden Verlinkungen.\n(Deine Spielstände bleiben erhalten)\n\nBestehende NNID-Verlinkungen werden überschrieben!",
+        "working": "Verlinke...",
+        "complete": "Accounts verlinkt!"
+    },
+    "unlink_accounts_view": {
+        "title": "Ausgewählte Accounts entlinken",
+        "warning": "Das Entlinken ändert die User-Accounts.\n(Deine Spielstände bleiben erhalten)\n\nBestehende NNID-Verlinkungen werden gelöscht!",
+        "working": "Entlinke...",
+        "complete": "Accounts entlinkt!"
+    },
+    "country_select_view": {
+        "title": "Land für verlinkte Accounts wählen"
+    },
+    "account_select_view": {
+        "title": "Accounts zum Verlinken/Entlinken wählen",
+        "select_all": "Alle auswählen",
+        "unselect_all": "Alle abwählen",
+        "selected_count": "{}/{} ausgewählt",
+        "extra_info": "{} Account{} gefunden\nReboot to Payload {}",
+        "reboot_payload_disabled": "deaktiviert",
+        "reboot_payload_inactive": "inaktiv ({} nicht gefunden)",
+        "reboot_payload_active": "aktiv"
+    },
+    "account_list_item": {
+        "linked": "Verlinkt",
+        "not_linked": "Nicht verlinkt"
+    },
+    "confirm_view": {
+        "continue": "Weiter",
+        "back": "Zurück",
+        "reboot": "Neustart",
+        "reboot_to_payload": "Neustart zu Payload"
+    },
+    "errors": {
+        "no_accounts_selected": "Keine Accounts ausgewählt!"
+    }
+}
